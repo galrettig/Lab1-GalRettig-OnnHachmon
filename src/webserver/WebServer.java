@@ -27,7 +27,7 @@ public class WebServer {
 			    		fullRequest += clientInput;
 			    	}
 			    	System.out.println(fullRequest);
-			    	
+			    
 			    	
 
 			}
