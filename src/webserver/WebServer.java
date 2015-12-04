@@ -29,7 +29,6 @@ public class WebServer {
 			    	System.out.println(fullRequest);
 			    	
 			    	
-			    	
 
 			}
 		} catch (IOException e) {
