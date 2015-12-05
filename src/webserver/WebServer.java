@@ -2,36 +2,35 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WebServer {
 
 	public static void main(String[] args) throws IOException
 	{
-		String clientInput;
-		ServerSocket serverSoc;
-		try {
-			serverSoc = new ServerSocket(8080);
-			while(true) {
-				
-				Socket connection = serverSoc.accept();
-				String fullRequest = "";
-				BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line = inputClient.readLine();
-				while(line != null && !line.equals(""))
-				{
-					System.out.println(line);
-					fullRequest += line;
-					line = inputClient.readLine();
-				}
-			}
+		// @TODO: open the file and read the data to conf object
+		readFile();
+	}
+	
+	
+	public static void readFile()
+	{
+		Path file = FileSystems.getDefault().getPath("/Users/onncho/Dropbox/Study/IDC/Semester 5/תקשורת/lab1/Lab1-GalRettig-OnnHachmon/configuration", "myWebConf.ini");
+		
+		try (InputStream in = Files.newInputStream(file);
+		    BufferedReader reader =
+		      new BufferedReader(new InputStreamReader(in))) {
+		    String line = null;
+		    while ((line = reader.readLine()) != null) {
+		        System.out.println(line);
+		    }
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		    System.err.println(e);
 		}
+
 	}
 }
