@@ -29,6 +29,7 @@ public class ServerListener {
 					line = inputClient.readLine();
 				}
 				System.out.println(fullRequest);//full request obtained
+				this.handleRequest(fullRequest);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -36,5 +37,11 @@ public class ServerListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void handleRequest(String i_fullRequest){
+		Parser parser = new Parser();
+		parser.parseHttp(i_fullRequest);
+		
 	}
 }

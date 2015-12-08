@@ -1,0 +1,27 @@
+GET / HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36
+DNT: 1
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: en-US,en;q=0.8,he;q=0.6
+
+
+
+ANOTHER ONE
+
+/**
+	 * GET http://www.sport5.co.il/ HTTP/1.1
+	 * Host: www.sport5.co.il
+	 * Proxy-Connection: keep-alive
+	 * Cache-Control: max-age=0
+	 * Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,**;q=0.8
+	 * Upgrade-Insecure-Requests: 1
+	 * User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36
+	 * Accept-Encoding: gzip, deflate, sdch
+	 * Accept-Language: en-US,en;q=0.8
+	 * Cookie: __utma=213585750.1349511689.1439593092.1439593092.1439593092.1; __utmz=213585750.1439593092.1.1.utmcsr=mako.co.il|utmccn=(referral)|utmcmd=referral|utmcct=/; __gads=ID=cd98b214498863b9:T=1439593092:S=ALNI_MYdOB-dApGIbHDKiKrwyM_8rldGqw
+	 * @param i_httpRequest
+	 */

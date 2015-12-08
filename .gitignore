@@ -1,1 +1,3 @@
 bin/webserver/WebServer.class
+*.class
+src/webserver/dbug.java
