@@ -13,11 +13,23 @@ import java.util.Properties;
 
 public class WebServer {
 	
-	
 
+	
 	public static void main(String[] args) throws IOException
 	{
-		readConfFile();
+		ServerListener webSrv;
+		ConfigurationObject m_appConfigObject;
+		
+		// create configuration object
+		m_appConfigObject = new ConfigurationObject(readConfFile());
+		
+		// create listener
+		webSrv = new ServerListener();
+		webSrv.runListener(m_appConfigObject);
+		
+		// create http request
+		
+		
 	}
 
 	//TODO: delete
@@ -40,7 +52,7 @@ public class WebServer {
 	}
 
 
-	public static void readConfFile()
+	public static HashMap<String, String> readConfFile()
 	{
 		Properties prop = new Properties();
 		InputStream input = null;
@@ -61,11 +73,6 @@ public class WebServer {
 			confList.put("maxThreads", prop.getProperty("maxThreads"));
 			confList.put("defaultPage", prop.getProperty("defaultPage"));
 			
-			// create configuration object
-			ConfigurationObject m_appConfigObject = new ConfigurationObject(confList);
-			
-			//
-
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -77,5 +84,6 @@ public class WebServer {
 				}
 			}
 		}
+		return confList;
 	}
 }
