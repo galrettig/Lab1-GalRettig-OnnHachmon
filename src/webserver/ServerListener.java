@@ -24,10 +24,11 @@ public class ServerListener {
 				
 				while(line != null && !line.equals(""))
 				{
-					System.out.println(line);
-					fullRequest += line;
+					
+					fullRequest += (line + "\n");
 					line = inputClient.readLine();
 				}
+				System.out.println(fullRequest);//full request obtained
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
