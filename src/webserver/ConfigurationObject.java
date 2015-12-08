@@ -16,7 +16,7 @@ public class ConfigurationObject {
 		m_rootFolder = i_confList.get("root");
 		m_defaultPage = i_confList.get("defaultPage");
 		m_MaxThreads = i_confList.get("maxThreads");
-		m_defaultPageFullUrl = m_rootFolder + m_defaultPage;
+		m_defaultPageFullUrl = m_rootFolder + "/" + m_defaultPage;
 	}
 	
 	

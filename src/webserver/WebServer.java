@@ -13,11 +13,23 @@ import java.util.Properties;
 
 public class WebServer {
 	
-	
 
+	
 	public static void main(String[] args) throws IOException
 	{
-		readConfFile();
+		ServerListener webSrv;
+		ConfigurationObject m_appConfigObject;
+		
+		// create configuration object
+		m_appConfigObject = new ConfigurationObject(readConfFile());
+		
+		// create listener
+		webSrv = new ServerListener();
+		webSrv.runListener(m_appConfigObject);
+		
+		// create http request
+		
+		
 	}
 
 	//TODO: delete
@@ -40,14 +52,17 @@ public class WebServer {
 	}
 
 
-	public static void readConfFile()
+	public static HashMap<String, String> readConfFile()
 	{
 		Properties prop = new Properties();
 		InputStream input = null;
-		HashMap<String, String> confList = new HashMap<>(); 
+		HashMap<String, String> confList = new HashMap<>();
+		
+		// Change Path For Windows
+		String pathToConfIniFile = "/Users/onncho/Dropbox/Study/IDC/Semester 5/תקשורת/lab1/Lab1-GalRettig-OnnHachmon/configuration/myWebconf.ini";
 
 		try {
-			input = new FileInputStream("/Users/onncho/Dropbox/Study/IDC/Semester 5/תקשורת/lab1/Lab1-GalRettig-OnnHachmon/configuration/myWebconf.ini");
+			input = new FileInputStream(pathToConfIniFile);
 
 			// load a properties file
 			prop.load(input);
@@ -58,11 +73,6 @@ public class WebServer {
 			confList.put("maxThreads", prop.getProperty("maxThreads"));
 			confList.put("defaultPage", prop.getProperty("defaultPage"));
 			
-			// create conf object
-			ConfigurationObject m_appConfigObject = new ConfigurationObject(confList);
-			
-			//
-
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -74,5 +84,6 @@ public class WebServer {
 				}
 			}
 		}
+		return confList;
 	}
 }
