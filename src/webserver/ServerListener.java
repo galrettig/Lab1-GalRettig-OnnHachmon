@@ -8,11 +8,12 @@ import java.net.Socket;
 
 public class ServerListener {
 
-	public void runListener()
+	public void runListener(ConfigurationObject i_confObject)
 	{
 		ServerSocket serverSoc;
 		try {
-			serverSoc = new ServerSocket(8080);
+			
+			serverSoc = new ServerSocket(Integer.parseInt(i_confObject.m_Port));
 			
 			while(true) {
 

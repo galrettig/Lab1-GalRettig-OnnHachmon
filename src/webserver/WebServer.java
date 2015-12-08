@@ -44,10 +44,13 @@ public class WebServer {
 	{
 		Properties prop = new Properties();
 		InputStream input = null;
-		HashMap<String, String> confList = new HashMap<>(); 
+		HashMap<String, String> confList = new HashMap<>();
+		
+		// Change Path For Windows
+		String pathToConfIniFile = "/Users/onncho/Dropbox/Study/IDC/Semester 5/תקשורת/lab1/Lab1-GalRettig-OnnHachmon/configuration/myWebconf.ini";
 
 		try {
-			input = new FileInputStream("/Users/onncho/Dropbox/Study/IDC/Semester 5/תקשורת/lab1/Lab1-GalRettig-OnnHachmon/configuration/myWebconf.ini");
+			input = new FileInputStream(pathToConfIniFile);
 
 			// load a properties file
 			prop.load(input);
@@ -58,7 +61,7 @@ public class WebServer {
 			confList.put("maxThreads", prop.getProperty("maxThreads"));
 			confList.put("defaultPage", prop.getProperty("defaultPage"));
 			
-			// create conf object
+			// create configuration object
 			ConfigurationObject m_appConfigObject = new ConfigurationObject(confList);
 			
 			//
