@@ -8,6 +8,7 @@ import java.net.Socket;
 
 public class ServerListener {
 
+	public void runListener(ConfigurationObject i_confObject)
 	{
 		ServerSocket serverSoc;
 		try {
