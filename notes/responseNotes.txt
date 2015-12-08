@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8  /// index.html --> image/
+Last-Modified: Tue, 08 Dec 2015 22:08:15 GMT
+Accept-Ranges: bytes
+VX-Cache: HIT
+WAI: 02
+V-TTL: 0
+backend-cache-control: 
+Content-Encoding: gzip
+Content-Length: 85788
+Vary: Accept-Encoding
+Date: Tue, 08 Dec 2015 22:10:36 GMT
+Connection: keep-alive
+
+TODO:
+print
+send the resource

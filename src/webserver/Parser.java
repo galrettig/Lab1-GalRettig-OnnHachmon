@@ -10,7 +10,7 @@ public class Parser {
 	}
 	
 	public static HashMap<String, String> parseHttp(String i_httpRequest){
-		
+	//TODO:	yo
 		String[] httpRequestToArray = i_httpRequest.split(" ");
 		String firstVerb = httpRequestToArray[0];
 		
