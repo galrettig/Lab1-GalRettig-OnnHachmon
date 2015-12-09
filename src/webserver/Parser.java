@@ -1,5 +1,6 @@
 package webserver;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Parser {
 
@@ -42,32 +43,76 @@ public class Parser {
 	}
 
 	private static HashMap<String,String> trimHTTPRequest(String i_httpRequest){
-
-		String[] trimToHeaders = i_httpRequest.split("\n");
-		System.out.println(handleFirstLineOfRequest(trimToHeaders[0]));
-
+		HashMap<String, String> trimmedStringToHashMap;
+		String[] trimToHeaders;
+		
+		trimToHeaders = i_httpRequest.split("\n");
+		trimmedStringToHashMap = handleFirstLineOfRequest(trimToHeaders[0]);//First line of an HTTPRequest has 3 values, parsing separately 
+		
+		//TODO - handle errors that might occur
+		if(trimmedStringToHashMap != null) {
+			handleRestOfRequest(trimToHeaders, trimmedStringToHashMap);
+			
+		}
+		
 
 		return null;
 	}
 
-	private static String[] handleFirstLineOfRequest(String firstLine){
+	/**
+	 * 
+	 * @param firstLine
+	 * @return [Request Type, URI, HTTP-Version] || null (if fails)
+	 */
+	private static HashMap<String, String> handleFirstLineOfRequest(String firstLine){
+		//TODO: remove debugging syso..
 		String[] splitted = firstLine.split(" ");
 		if(splitted.length != 3){
-
-			//TODO: remove debugging print..
+			//Debug
 			System.out.println("error in fist line of request -- more or less then 3 arguments given");
-
+			//
 			return null;
 		}
 		
+		// Debugging purposes
 		System.out.println("Parser.java --> HandleFirstLineOfRequest --> amount of arguments give are : " 
-		+ splitted.length + "\narguments given are : ");
+								+ splitted.length + "\narguments given are : ");
 		for(int i = 0; i < splitted.length; i++){
 			System.out.println("debug( " + splitted[i] + " )");
 		}
+		// End of Debug
+		
+		
+		HashMap<String, String> hashToReturn = new HashMap<>();
+		hashToReturn.put("RequestType", splitted[0]);
+		hashToReturn.put("URI", splitted[1]);
+		hashToReturn.put("HTTPVersion", splitted[2]);
 
-		return splitted;
-
+		return hashToReturn;
+	}
+	
+	private static void handleRestOfRequest(String[] i_requestTrimmedToLines, HashMap<String,String> o_map){
+		for(int i = 1; i < i_requestTrimmedToLines.length; i++){
+			int headerSeperatorIndex;
+			String headerSeperator, headerName, headerValue;
+			String[] trimmedLineBySeperator;
+			
+			headerSeperator = ": ";//space after ':' 
+			headerSeperatorIndex = i_requestTrimmedToLines[i].indexOf(headerSeperator);
+			
+			if(headerSeperatorIndex == -1){
+				System.out.println("error : handleRestOfRequest --> missing ': ' string from request in line : " + i);
+				handleRequestErrors();//TODO: take care for this
+			} else {
+				trimmedLineBySeperator = i_requestTrimmedToLines[i].split(headerSeperator);
+				headerName = trimmedLineBySeperator[0];
+				headerValue = trimmedLineBySeperator[1];
+				
+				//TODO: verify to overwrite duplicated header -- and throw error in this case
+				o_map.put(headerName, headerValue);
+			}
+			
+		}
 	}
 
 
@@ -92,6 +137,12 @@ public class Parser {
 		// TODO Auto-generated method stub
 		System.out.println(i_httpRequest);
 	}
+	
+	private static void handleRequestErrors(){
+		//TODO: implement
+		System.out.println("some error");
+	}
+	
 	
 	
 
