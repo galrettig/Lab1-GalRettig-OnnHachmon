@@ -15,3 +15,9 @@ Connection: keep-alive
 TODO:
 print
 send the resource
+
+/Users/onncho/Dropbox/Study/IDC/Semester 5/תקשורת/lab1/Lab1-GalRettig-OnnHachmon/configuration/myWebconf.ini
+
+// webserver -> read configuration file and create object -> open listener (configuration object) -> waiting for request
+		
+// create http request -> parser class -> create http response -> respond to client

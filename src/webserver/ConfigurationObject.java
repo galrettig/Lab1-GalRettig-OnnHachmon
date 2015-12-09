@@ -5,11 +5,10 @@ import java.util.HashMap;
 public class ConfigurationObject {
 
 	String m_Port;
-	String m_rootFolder;
 	String m_defaultPage;
 	String m_MaxThreads;
-	String m_defaultPageFullUrl;
-	
+	private static String m_defaultPageFullUrl;
+	private static String m_rootFolder;
 
 	public ConfigurationObject(HashMap<String, String> i_confList) {
 		m_Port = i_confList.get("port");
@@ -19,5 +18,14 @@ public class ConfigurationObject {
 		m_defaultPageFullUrl = m_rootFolder + "/" + m_defaultPage;
 	}
 	
+	public static String getRoot()
+	{
+		return m_rootFolder;
+	}
+	
+	public static String getDefaultPage()
+	{
+		return m_defaultPageFullUrl;
+	}
 	
 }

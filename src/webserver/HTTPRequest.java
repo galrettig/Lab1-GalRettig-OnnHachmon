@@ -17,7 +17,7 @@ public class HTTPRequest {
 	String m_UserAgent;
 	//Parameters – the parameters in the request (I used java.util.HashMap<String,String> to hold the parameters).
 	HashMap<String, String> m_HttpRequestParams; 
-	
+
 	public HTTPRequest() {
 		
 		// webserver -> read configuration file and create object -> open listener (configuration object) -> waiting for request
