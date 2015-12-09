@@ -18,25 +18,27 @@ public class Parser {
 		
 		if(i_httpRequest == null) return null;
 		
-		int indexOfFirstSpace = i_httpRequest.indexOf(" ");
-		String requestType = i_httpRequest.substring(0, indexOfFirstSpace);
+		
 		HashMap<String, String> requestTrimmed = trimHTTPRequest(i_httpRequest);
+		String requestType = requestTrimmed.get("RequestType");
+		
+		
 
 		if (requestType.equals(HttpRequestType.GET)) 
 		{
-			parseGetRequest(i_httpRequest);
+			parseGetRequest(requestTrimmed);
 		}
 		else if (requestType.equals(HttpRequestType.POST))
 		{
-			parsePostRequest(i_httpRequest);
+			parsePostRequest(requestTrimmed);
 		}
 		else if (requestType.equals(HttpRequestType.HTTP_HEAD))
 		{
-			parseHttpHeadRequest(i_httpRequest);
+			parseHttpHeadRequest(requestTrimmed);
 		}
 		else if (requestType.equals(HttpRequestType.TRACE))
 		{
-			parseTraceRequest(i_httpRequest);
+			parseTraceRequest(requestTrimmed);
 		}
 
 		return null;
@@ -56,7 +58,7 @@ public class Parser {
 		}
 		
 
-		return null;
+		return trimmedStringToHashMap;
 	}
 
 	/**
@@ -92,12 +94,15 @@ public class Parser {
 	}
 	
 	private static void handleRestOfRequest(String[] i_requestTrimmedToLines, HashMap<String,String> o_map){
+
+		// i starts from 1 because we already parsed the first line
 		for(int i = 1; i < i_requestTrimmedToLines.length; i++){
+			
 			int headerSeperatorIndex;
 			String headerSeperator, headerName, headerValue;
 			String[] trimmedLineBySeperator;
 			
-			headerSeperator = ": ";//space after ':' 
+			headerSeperator = ": ";//notice the space after ':' 
 			headerSeperatorIndex = i_requestTrimmedToLines[i].indexOf(headerSeperator);
 			
 			if(headerSeperatorIndex == -1){
@@ -116,24 +121,24 @@ public class Parser {
 	}
 
 
-	private static void parseTraceRequest(String i_httpRequest) {
+	private static void parseTraceRequest(HashMap<String, String> i_httpRequest) {
 
 		System.out.println(i_httpRequest);
 
 	}
 
-	private static void parseHttpHeadRequest(String i_httpRequest) {
+	private static void parseHttpHeadRequest(HashMap<String, String> i_httpRequest) {
 		// TODO Auto-generated method stub
 		System.out.println(i_httpRequest);
 	}
 
-	private static void parsePostRequest(String i_httpRequest) {
+	private static void parsePostRequest(HashMap<String, String> i_httpRequest) {
 		// TODO Auto-generated method stub
 		System.out.println(i_httpRequest);
 	}
 
 
-	private static void parseGetRequest(String i_httpRequest) {
+	private static void parseGetRequest(HashMap<String, String> i_httpRequest) {
 		// TODO Auto-generated method stub
 		System.out.println(i_httpRequest);
 	}
