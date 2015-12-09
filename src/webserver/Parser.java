@@ -24,22 +24,7 @@ public class Parser {
 		
 		
 
-		if (requestType.equals(HttpRequestType.GET)) 
-		{
-			parseGetRequest(requestTrimmed);
-		}
-		else if (requestType.equals(HttpRequestType.POST))
-		{
-			parsePostRequest(requestTrimmed);
-		}
-		else if (requestType.equals(HttpRequestType.HTTP_HEAD))
-		{
-			parseHttpHeadRequest(requestTrimmed);
-		}
-		else if (requestType.equals(HttpRequestType.TRACE))
-		{
-			parseTraceRequest(requestTrimmed);
-		}
+		
 
 		return null;
 	}
@@ -50,9 +35,28 @@ public class Parser {
 		
 		trimToHeaders = i_httpRequest.split("\n");
 		trimmedStringToHashMap = handleFirstLineOfRequest(trimToHeaders[0]);//First line of an HTTPRequest has 3 values, parsing separately 
-		
+		String requestType = trimmedStringToHashMap.get("RequestType");
 		//TODO - handle errors that might occur
 		if(trimmedStringToHashMap != null) {
+			
+			if (requestType.equals(HttpRequestType.GET)) 
+			{
+				parseGetRequest(trimmedStringToHashMap.get("URI"), trimmedStringToHashMap);
+			}
+			else if (requestType.equals(HttpRequestType.POST))
+			{
+				parsePostRequest(trimmedStringToHashMap);
+			}
+			else if (requestType.equals(HttpRequestType.HTTP_HEAD))
+			{
+				parseHttpHeadRequest(trimmedStringToHashMap);
+			}
+			else if (requestType.equals(HttpRequestType.TRACE))
+			{
+				parseTraceRequest(trimmedStringToHashMap);
+			}
+			
+			
 			handleRestOfRequest(trimToHeaders, trimmedStringToHashMap);
 			
 		}
@@ -83,6 +87,8 @@ public class Parser {
 			System.out.println("debug( " + splitted[i] + " )");
 		}
 		// End of Debug
+		
+		
 		
 		
 		HashMap<String, String> hashToReturn = new HashMap<>();
@@ -138,9 +144,32 @@ public class Parser {
 	}
 
 
-	private static void parseGetRequest(HashMap<String, String> i_httpRequest) {
-		// TODO Auto-generated method stub
-		System.out.println(i_httpRequest);
+	private static void parseGetRequest(String i_URI, HashMap<String,String> o_map) {
+		String[] reqParams = GETextractParamsFromURI(i_URI);
+		if(reqParams[1] != null){
+			o_map.replace("URI", reqParams[0]);
+			o_map.put("paramters", reqParams[1]);
+		}
+		
+		
+	}
+	
+	
+	private static String[] GETextractParamsFromURI(String i_URI){
+		int indexOfParams = i_URI.indexOf("?");
+		String[] requestParamsAndURI = new String[2];
+		
+	
+		
+		if(indexOfParams > -1){
+			requestParamsAndURI[0] = i_URI.substring(0,indexOfParams);
+			requestParamsAndURI[1] = i_URI.substring(indexOfParams + 1);
+			return requestParamsAndURI;
+		} else {
+			requestParamsAndURI[0] = i_URI;
+			requestParamsAndURI[1] = null;
+		}
+		return requestParamsAndURI;
 	}
 	
 	private static void handleRequestErrors(){
