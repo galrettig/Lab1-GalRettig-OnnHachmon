@@ -25,10 +25,12 @@ public class HTTPResponse {
 	public String constructResponse() {
 		
 		boolean responseDefualt = false;
+		String statusLine = "";
 		
 		if (!checkResource(m_RequestedPage)) {
 			responseDefualt = true;
 		}
+		
 		
 		m_Response += (m_HttpVersion );
 		m_Response += constructContentTypeResponse();
