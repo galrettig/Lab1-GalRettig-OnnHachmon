@@ -17,7 +17,8 @@ public class HTTPResponse {
 	int m_ContentLength; 
 	String m_ContentType;
 	String v_ContentType = "Content-Type: ";
-	String v_ContentLength = "Content-Length: "; 
+	String v_ContentLength = "Content-Length: ";
+	String m_PathTofile;
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
 	{
@@ -46,14 +47,12 @@ public class HTTPResponse {
 	}
 
 	// The Method for clients of this object
-	public String runResponseHandler() 
+	public String GenerateResponse() 
 	{
 		String result = constructResponse();
 		System.out.println(result);
 		return result;
 	}
-	
-	public 
 	
 	private String constructResponse() 
 	{
@@ -115,6 +114,7 @@ public class HTTPResponse {
 			{
 				// TODO: check if int or long
 				m_ContentLength = (int) file.length();
+				m_PathTofile = pathname;
 				return true;
 			}
 		} 
@@ -159,6 +159,13 @@ public class HTTPResponse {
 			break;
 		}
 		return m_ContentType;
+	}
+	
+	public String getPathToFile() {
+		if (m_PathTofile.equals(null)) {
+			return ConfigurationObject.getRoot() + "/" + "index.html";
+		}
+		return m_PathTofile;
 	}
 
 	/*
