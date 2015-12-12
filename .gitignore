@@ -4,3 +4,8 @@ src/webserver/dbug.java
 *.class
 *.class
 *.class
+*.class
+
+bin/webserver/Parser.class
+
+bin/webserver/HTTPResponse.class

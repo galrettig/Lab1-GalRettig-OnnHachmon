@@ -1,5 +1,7 @@
 package webserver;
 
+// TODO: Delete
+
 public enum ImageTypes {
 	BMP("bmp"),
 	GIF("gif"),
