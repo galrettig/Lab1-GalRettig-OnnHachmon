@@ -13,6 +13,17 @@ public enum HTTPResponseCode {
 	HTTPResponseCode(String displayName) {
 		this.displayName = displayName;
 	}
+	
+	public static HTTPResponseCode getStatusCode(String t)
+	{
+		for (HTTPResponseCode res : values()) {
+			if (res.equals(t))
+			{
+				return res;
+			}
+		}
+		return null;
+	}
 
 	public String displayName() { return displayName; }
 }
