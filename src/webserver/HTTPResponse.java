@@ -31,6 +31,7 @@ public class HTTPResponse {
 		}
 		
 		m_Response += (m_HttpVersion );
+		m_Response += constructContentTypeResponse();
 		m_Response += ("\n" + v_ContentLength + m_ContentLength);
 		
 		// TODO: Print the request Headers with the response
