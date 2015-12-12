@@ -9,3 +9,5 @@ src/webserver/dbug.java
 bin/webserver/Parser.class
 
 bin/webserver/HTTPResponse.class
+
+*.class
