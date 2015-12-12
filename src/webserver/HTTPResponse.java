@@ -53,9 +53,8 @@ public class HTTPResponse {
 		return result;
 	}
 	
-	public 
 	
-	public String constructResponse() 
+	private String constructResponse() 
 	{
 
 		// Construct the first status line

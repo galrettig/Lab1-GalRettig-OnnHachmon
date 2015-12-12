@@ -9,7 +9,6 @@ public enum HTTPResponseCode {
 	INTERNAL_SERVER_ERROR("500 Internal Server Error");
 
 	private String displayName;
-	// bla bla bla
 
 	HTTPResponseCode(String displayName) {
 		this.displayName = displayName;
