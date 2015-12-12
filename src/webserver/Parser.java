@@ -8,7 +8,7 @@ public class Parser {
 
 	public static HTTPRequest parseHttp(String i_httpRequest, String msgBody){
 		
-		HTTPRequest reqObj;
+		HTTPRequest reqObj = null;
 		HashMap<String, String> params = new HashMap<>();
 		
 		String[] requestSplitted = i_httpRequest.split("\n");
