@@ -18,93 +18,71 @@ public class ServerListener {
 			serverSoc = new ServerSocket(Integer.parseInt(i_confObject.m_Port));
 
 			while(true) {
-/*
-				Socket connection = serverSoc.accept();
-				String fullRequest = "";
-				BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line = inputClient.readLine();
 
-
-				while(line != null && !line.equals(""))
-				{
-
-					fullRequest += (line + "\n");
-					line = inputClient.readLine();
-				}
-				System.out.println(fullRequest);//full request obtained
-				this.handleRequest(fullRequest);*/
 				handleReadingFromSocket(serverSoc);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 
+	
 	public void handleReadingFromSocket(ServerSocket serverSoc){
 		Socket connection;
-		int contentLengthValue = 0;
 		BufferedReader inputClient;
-		String line;
-		String fullRequest = "";
-		boolean keepReading = true, readMsgBody = false;
+		String line, fullRequest = "", messageBodyString = null;
+		int contentLength = -1;
+		char[] msgBody;
+		StringBuilder messageBodyBuilder = null;
 
 		try {
-			connection = serverSoc.accept();
 
-			inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			line = inputClient.readLine();
+			while(true) {
 
-
-			while(keepReading)
-			{
-				if(line == null){
-					break;
-				}
-				if(line.indexOf(ContentLengthHeader) > -1){
-					contentLengthValue = Integer.parseInt(line.substring(ContentLengthHeader.length()));
-				}
-				if(contentLengthValue == 0 && line.equals("")){
-					break;
-				}
-				if(contentLengthValue > 0 && line.equals("") && !readMsgBody){
-					line = inputClient.readLine();
-					contentLengthValue = 0;
-				} else {
+				connection = serverSoc.accept();
+				fullRequest = "";
+				inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				line = inputClient.readLine();
 
 
+				while(line != null && !line.equals(""))
+				{
+					if(line.indexOf(ContentLengthHeader) > -1){
+						String leng = line.substring(ContentLengthHeader.length());
+						contentLength = Integer.parseInt(leng);
+					}
+
+					fullRequest += (line + "\n");
 					line = inputClient.readLine();
 				}
-				fullRequest += line+"\n";
+				
+				if(contentLength > 0){
+					msgBody = new char[contentLength];
+					inputClient.read(msgBody);
+					
+					messageBodyBuilder = new StringBuilder();
+					for(int i = 0; i < msgBody.length; i++){
+						messageBodyBuilder.append(msgBody[i]);
+					}
+					messageBodyString = messageBodyString.toString();
+					//System.out.println("message body = " + messageBodyStr.toString());
+					//fullRequest += messageBodyStr.toString();
+				}
+				//System.out.println(fullRequest);//full request obtained
+				this.handleRequest(fullRequest, messageBodyString);
 			}
-			System.out.println(fullRequest);
-
-
-
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 
-	/// move to parsing class later
-	public String[] parseFirstLine(String firstLine){
-		String[] firstLineParams = firstLine.split(" ");
-		if(firstLineParams.length != 3){
-			System.out.println("error in params");
-			return null;
-		}
 
-		return firstLineParams;
-	}
 
-	public void handleRequest(String i_fullRequest){
-		Parser parser = new Parser();
-		parser.parseHttp(i_fullRequest);
+	public void handleRequest(String i_fullRequest, String msgBody){
+		
+		Parser.parseHttp(i_fullRequest, msgBody);
 
 	}
 }

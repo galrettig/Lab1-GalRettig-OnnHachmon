@@ -23,6 +23,10 @@ public class HTTPRequest {
 		// webserver -> read configuration file and create object -> open listener (configuration object) -> waiting for request
 		
 		// create http request -> parser class -> create http response -> respond to client
+		
+		// parse request and create request object -> create response
+		
+		
 	}
 
 }

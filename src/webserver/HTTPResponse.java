@@ -69,7 +69,7 @@ public class HTTPResponse {
 		}
 		else if (m_ContentType == "image") 
 		{
-			String extension = ImageTypes.getExtestion(m_ContentExtension);
+			String extension = ".jpg"; //ImageTypes.getExtestion(m_ContentExtension);
 			
 			m_Response += (v_ContentType + "\n" + "image/" + extension);
 			
