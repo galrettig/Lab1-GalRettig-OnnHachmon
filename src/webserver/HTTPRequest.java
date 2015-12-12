@@ -32,6 +32,10 @@ public class HTTPRequest {
 			m_contentLength = 0;
 		}
 		
+		if(reqData.containsKey("Referer")){
+			this.m_ReferrerHeader = reqData.get("Referer");
+		}
+		
 		
 		
 	}
