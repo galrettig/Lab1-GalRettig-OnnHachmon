@@ -53,7 +53,6 @@ public class HTTPResponse {
 		return result;
 	}
 	
-	public 
 	
 	public String constructResponse() 
 	{
