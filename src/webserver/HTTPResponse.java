@@ -4,70 +4,97 @@ import java.util.HashMap;
 
 public class HTTPResponse {
 
-	String m_HttpVersion;
-	String m_ContentType; // text or image
+	String m_HttpVersion; // client error
 	String m_ContentExtension;
 	String m_RequestedPage; // TODO: check if valid exist
-	int m_ContentLength; // TODO: define max content length in parser class
 	String m_RequestType;
-	String m_ReferrerHeader;
-	//String m_UserAgent;
-	HTTPResponseCode m_requestStatusCode;
+	HTTPResponseCode m_ErrorsFoundInRequest;
+
 	HashMap<String, String> m_HttpRequestParams;
 
 	String m_Response;
-	String v_ContentType = "content-type: ";
+	HTTPResponseCode m_responseStatusCode;
+	int m_ContentLength; 
+	String m_ContentType;
+	String v_ContentType = "Content-Type: ";
 	String v_ContentLength = "Content-Length: "; 
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
 	{
+		m_Response = "";
 
-		m_Response = null;
+		if (i_HttpRequest.get("erros").equals(HTTPResponseCode.BAD_REQUEST)) 
+		{
+			m_ErrorsFoundInRequest = HTTPResponseCode.BAD_REQUEST;
+			m_responseStatusCode = HTTPResponseCode.BAD_REQUEST;
+		}
+		else 
+		{
+			m_HttpVersion = i_HttpRequest.get("HTTPVersion");
 
-		m_HttpVersion = i_HttpRequest.get("HTTPVersion");
-		m_ContentType = i_HttpRequest.get(v_ContentType);
-		
-		// TODO: transfer the extension from the parse
-		m_ContentExtension = i_HttpRequest.get("extension");
-		
-		m_RequestedPage = i_HttpRequest.get("URI");
-		
-		// TODO: check header in hash
-		m_ReferrerHeader = i_HttpRequest.get("head");
-		
-		
-		// TODO: status
-		// m_requestStatusCode = HTTPResponseCode.getStatusCode(i_HttpRequest.get("status"));
-		
-		m_ContentLength = Integer.parseInt(i_HttpRequest.get(v_ContentLength));
-		
+			// TODO: transfer the extension from the parse
+			m_ContentExtension = i_HttpRequest.get("extension");
+			
+			m_ContentType = constructExtensionToContentType();
+
+			m_RequestedPage = i_HttpRequest.get("URI");
+
+			m_RequestType = i_HttpRequest.get("RequestType");
+		}
+
 	}
 
+	// The Method for clients of this object
+	public String runResponseHandler() 
+	{
+		String result = constructResponse();
+		System.out.println(result);
+		return result;
+	}
+	
+	private String constructResponse() {
 
-	public String constructResponse() {
-
-		boolean responseDefualt = false;
-		
-		String statusLine = "";
-
-		if (!checkResource(m_RequestedPage)) {
-			responseDefualt = true;
-			m_requestStatusCode = HTTPResponseCode.NOT_FOUND;
-		}
-		
 		// Construct the first status line
-		statusLine += (m_HttpVersion + " " + m_requestStatusCode);
-		m_Response += statusLine;
-		
-		m_Response += constructContentTypeResponse();
-		m_Response += ("\n" + v_ContentLength + m_ContentLength);
+		m_Response += m_HttpVersion;
+
+		if (m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST)) 
+		{
+			m_Response += m_responseStatusCode;
+			return m_Response;
+		}
+		else
+		{
+			constructResponseCode();
+			m_Response += (m_responseStatusCode +
+					"\n" + m_ContentType + "\n" + 
+					v_ContentLength + m_ContentLength);
+		}
 
 		// TODO: Print the request Headers with the response
-		
 
-		return null;
+		return m_Response;
 	}
 
+
+
+	private void constructResponseCode() {
+
+		if (m_RequestType.equals("Other")) 
+		{
+			m_responseStatusCode = HTTPResponseCode.NOT_IMPLEMENTED;
+		}
+		else if (!checkResource(m_RequestedPage)) 
+		{
+			if (!m_responseStatusCode.equals(HTTPResponseCode.INTERNAL_SERVER_ERROR)) {				
+				m_responseStatusCode = HTTPResponseCode.NOT_FOUND;
+			}
+		}
+		else
+		{
+			m_responseStatusCode = HTTPResponseCode.OK;
+		}
+
+	}
 
 
 	private boolean checkResource(String i_RequestedPage) {
@@ -78,21 +105,63 @@ public class HTTPResponse {
 
 		File file = new File(pathname);
 
-		if (file.exists())
+		try 
 		{
-			return true;
+			if (file.exists())
+			{
+				// TODO: check if int or long
+				m_ContentLength = (int) file.length();
+				return true;
+			}
+		} 
+		catch (Exception e) {
+			m_responseStatusCode = HTTPResponseCode.INTERNAL_SERVER_ERROR;
+			return false;
 		}
-
 		return false;
 	}
 
 
+	private String constructExtensionToContentType()
+	{
+		switch (m_ContentExtension) {
+		case "html"	: 
+			m_ContentType = v_ContentType + "text/html";
+			break;
+		case "css"	: 
+			m_ContentType = v_ContentType + "text/css";
+		case "jpg"	: 
+			m_ContentType = v_ContentType + "image/jpeg";
+			break;
+		case "htm"	: 
+			m_ContentType = v_ContentType + "text/html";
+			break;
+		case "jpeg"	: 
+			m_ContentType = v_ContentType + "image/jpeg";
+			break;
+		case "js"	: 
+			m_ContentType = v_ContentType + "application/javascript";
+			break;
+		case "bmp"	: 
+			m_ContentType = v_ContentType + "image/bmp";
+			break;
+		case "gif"	: 
+			m_ContentType = v_ContentType + "image/gif";
+		case "txt"	: 
+			m_ContentType = v_ContentType + "text/plain";
+			break;
+		default		:
+			m_ContentType = v_ContentType + "application/octet-stream";
+			break;
+		}
+		return m_ContentType;
+	}
+
+	/*
 	public String constructContentTypeResponse()
 	{
-		// TODO: check if the request good or not
-
 		if (m_ContentType.equals("text")) {
-			m_Response += (v_ContentType + "\n" + "text/" + m_ContentType);
+			m_Response += (v_ContentType + "text/" + m_ContentType);
 
 			// TODO: think of a system how to call the resource after the response was sent
 		}
@@ -114,5 +183,6 @@ public class HTTPResponse {
 
 		return m_Response;
 	}
+	*/
 
 }
