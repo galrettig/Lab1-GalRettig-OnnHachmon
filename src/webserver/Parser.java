@@ -34,6 +34,9 @@ public class Parser {
 		String[] trimToHeaders;
 		
 		trimToHeaders = i_httpRequest.split("\n");
+		for(int i = 0; i < trimToHeaders.length; i++){
+			System.out.println(i + ")" +trimToHeaders[i]);
+		}
 		trimmedStringToHashMap = handleFirstLineOfRequest(trimToHeaders[0]);//First line of an HTTPRequest has 3 values, parsing separately 
 		String requestType = trimmedStringToHashMap.get("RequestType");
 		//TODO - handle errors that might occur
@@ -45,7 +48,7 @@ public class Parser {
 			}
 			else if (requestType.equals(HttpRequestType.POST))
 			{
-				parsePostRequest(trimmedStringToHashMap);
+				parsePostRequest(trimmedStringToHashMap, i_httpRequest);
 			}
 			else if (requestType.equals(HttpRequestType.HTTP_HEAD))
 			{
@@ -103,6 +106,7 @@ public class Parser {
 
 		// i starts from 1 because we already parsed the first line
 		for(int i = 1; i < i_requestTrimmedToLines.length; i++){
+			//System.out.println(i+")"+i_requestTrimmedToLines[i]);
 			
 			int headerSeperatorIndex;
 			String headerSeperator, headerName, headerValue;
@@ -132,13 +136,17 @@ public class Parser {
 		System.out.println(i_httpRequest);
 
 	}
-
-	private static void parseHttpHeadRequest(HashMap<String, String> i_httpRequest) {
+	
+	private static void parsePostRequest(HashMap<String, String> o_map, String i_httpRequest) {
 		// TODO Auto-generated method stub
-		System.out.println(i_httpRequest);
+		String[] trimmedParams = i_httpRequest.split("\r\n");
+		for(int i = 0; i < trimmedParams.length; i++){
+			System.out.println(i + ")" + trimmedParams);
+		}
+		//System.out.println(i_httpRequest);
 	}
 
-	private static void parsePostRequest(HashMap<String, String> i_httpRequest) {
+	private static void parseHttpHeadRequest(HashMap<String, String> i_httpRequest) {
 		// TODO Auto-generated method stub
 		System.out.println(i_httpRequest);
 	}
