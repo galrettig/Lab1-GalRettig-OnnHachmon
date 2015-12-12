@@ -16,10 +16,15 @@ public class Parser {
 		
 		
 		
+		
+		
+		
 
 
 		return null;
 	}
+	
+	private static boolean verifyValid
 	
 	
 	private static HashMap<String, String> breakRequestStringToHeaders(String[] requestHeaders){

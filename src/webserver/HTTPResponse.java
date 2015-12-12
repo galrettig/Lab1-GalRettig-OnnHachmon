@@ -31,7 +31,6 @@ public class HTTPResponse {
 		}
 		
 		m_Response += (m_HttpVersion );
-		m_Response += constructContentTypeResponse();
 		m_Response += ("\n" + v_ContentLength + m_ContentLength);
 		
 		// TODO: Print the request Headers with the response
@@ -69,7 +68,7 @@ public class HTTPResponse {
 		}
 		else if (m_ContentType == "image") 
 		{
-			String extension = ".jpg"; //ImageTypes.getExtestion(m_ContentExtension);
+			String extension = ImageTypes.getExtestion(m_ContentExtension);
 			
 			m_Response += (v_ContentType + "\n" + "image/" + extension);
 			
