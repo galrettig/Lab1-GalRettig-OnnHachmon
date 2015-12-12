@@ -9,11 +9,34 @@ public class Parser {
 	public static HTTPRequest parseHttp(String i_httpRequest, String msgBody){
 		
 		HTTPRequest reqObj;
+		HashMap<String, String> params = new HashMap<>();
 		
 		String[] requestSplitted = i_httpRequest.split("\n");
 		String[] requestLine = requestSplitted[0].split(" ");
 		HashMap<String, String> requestHeaders = breakRequestStringToHeaders(requestSplitted);
+		HttpRequestType type = HttpRequestType.OTHER;
 		
+		if(verifyValidRequestLine(requestLine, requestHeaders)){
+			String requestType = requestLine[0];
+			if(requestType.equals(HttpRequestType.GET)){
+				requestLine[1] = parseGetRequest(requestLine[1], params);
+				type = HttpRequestType.GET;
+			} 
+			else if(requestType.equals(HttpRequestType.POST)){
+				parsePostRequest(msgBody, params);
+				type = HttpRequestType.POST;
+				
+			}
+			else if(requestType.equals(HttpRequestType.HTTP_HEAD)){
+				type = HttpRequestType.HTTP_HEAD;
+			}
+			else if(requestType.equals(HttpRequestType.TRACE)){
+				type = HttpRequestType.TRACE;
+			}
+			//else{}
+			
+			reqObj = new HTTPRequest(requestHeaders, params, type);
+		}
 		
 		
 		
@@ -21,10 +44,19 @@ public class Parser {
 		
 
 
-		return null;
+		return reqObj;
 	}
 	
-	private static boolean verifyValid
+	private static boolean verifyValidRequestLine(String[] reqLine, HashMap<String, String> headersMap){
+		boolean valid = false;
+		if(reqLine.length == 3){
+			valid = true;
+			headersMap.put("RequestType", reqLine[0]);
+			headersMap.put("URI", reqLine[1]);
+			headersMap.put("HTTPVersion", reqLine[2]);
+		}
+		return valid;
+	}
 	
 	
 	private static HashMap<String, String> breakRequestStringToHeaders(String[] requestHeaders){
