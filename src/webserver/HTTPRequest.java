@@ -63,6 +63,10 @@ public class HTTPRequest {
 		
 	}
 	
+	public HashMap<String, String> getMap (){
+		return this.m_requestHeaders;
+	}
+	
 	public boolean ImplementedMethod(){
 		if(m_RequestType.equals(HttpRequestType.GET) ||
 				m_RequestType.equals(HttpRequestType.POST) || 

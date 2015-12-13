@@ -91,12 +91,12 @@ public class ServerListener {
 		String response = res.GenerateResponse();
 		try {
 			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-			writer.writeBytes((response));
+			writer.writeBytes((response + "/r/n/r/n"));
 			if(res.m_PathTofile != null){
 				byte[] fileToSend = readFile(new File(res.getPathToFile()));
-				writer.writeBytes("/r/n");
+				
 				writer.flush();
-				writer.write(fileToSend);
+				writer.write(fileToSend, 0, fileToSend.length);
 				writer.flush();
 				writer.writeBytes("/r/n");
 				writer.flush();
