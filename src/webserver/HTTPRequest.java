@@ -17,11 +17,15 @@ public class HTTPRequest {
 	String m_UserAgent;
 	//Parameters – the parameters in the request (I used java.util.HashMap<String,String> to hold the parameters).
 	String m_HTTPver;
-	HashMap<String, String> m_HttpRequestParams; 
+	HashMap<String, String> m_HttpRequestParams;
+	HashMap<String, String> m_requestHeaders;
+	String m_originalRequest;
+	
 
-	public HTTPRequest(HashMap<String, String> reqData, HashMap<String,String> params, HttpRequestType type) {
+	public HTTPRequest(String originalRequest, HashMap<String, String> reqData, HashMap<String,String> params, HttpRequestType type, boolean isImage) {
 		
-		
+		m_requestHeaders = reqData;
+		m_originalRequest = originalRequest;
 		this.m_RequestType = type;
 		this.m_RequestedPage = reqData.get("URI");
 		this.m_HTTPver = reqData.get("HTTPVersion");
@@ -36,10 +40,41 @@ public class HTTPRequest {
 			this.m_ReferrerHeader = reqData.get("Referer");
 		}
 		
+		if(reqData.containsKey("User-Agent")){
+			this.m_UserAgent = reqData.get("User-Agent"); 
+		}
+		
+		v_IsImage = isImage;
+		m_requestHeaders.put("erros", "none");
+		
+		if(!m_RequestedPage.equals("/")){
+			int indexOfExt = m_RequestedPage.indexOf(".");
+			if(indexOfExt > -1){
+				m_requestHeaders.put("extension", m_RequestedPage.substring(indexOfExt + 1));
+			} else {
+				m_requestHeaders.replace("erros", "400 Bad Request");
+			}
+			
+		} else {
+			m_requestHeaders.put("extension", "html");
+		}
+		
 		
 		
 	}
 	
+	public boolean ImplementedMethod(){
+		if(m_RequestType.equals(HttpRequestType.GET) ||
+				m_RequestType.equals(HttpRequestType.POST) || 
+				m_RequestType.equals(HttpRequestType.HTTP_HEAD) ||
+				m_RequestType.equals(HttpRequestType.TRACE)){
+			return true;
+		}
+		return false;
+		
+	}
+	
+ 
 	
 	// webserver -> read configuration file and create object -> open listener (configuration object) -> waiting for request
 	

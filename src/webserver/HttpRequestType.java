@@ -3,7 +3,7 @@ package webserver;
 public enum HttpRequestType {
 	GET("GET"),
 	POST("POST"),
-	HTTP_HEAD("HTTP HEAD"),
+	HTTP_HEAD("HEAD"),
 	TRACE("TRACE"),
 	OTHER("Other");
 	

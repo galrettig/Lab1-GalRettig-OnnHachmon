@@ -1,6 +1,5 @@
 package webserver;
 import java.util.HashMap;
-import java.util.Set;
 
 public class Parser {
 
@@ -10,6 +9,7 @@ public class Parser {
 		
 		HTTPRequest reqObj = null;
 		HashMap<String, String> params = new HashMap<>();
+		boolean isImage = false;
 		
 		String[] requestSplitted = i_httpRequest.split("\n");
 		String[] requestLine = requestSplitted[0].split(" ");
@@ -21,21 +21,26 @@ public class Parser {
 			if(requestType.equals(HttpRequestType.GET)){
 				requestLine[1] = parseGetRequest(requestLine[1], params);
 				type = HttpRequestType.GET;
+				isImage = checkIfImage(requestLine[1]);
 			} 
 			else if(requestType.equals(HttpRequestType.POST)){
 				parsePostRequest(msgBody, params);
 				type = HttpRequestType.POST;
+				isImage = checkIfImage(requestLine[1]);
 				
 			}
 			else if(requestType.equals(HttpRequestType.HTTP_HEAD)){
+				requestLine[1] = parseGetRequest(requestLine[1], params);
 				type = HttpRequestType.HTTP_HEAD;
+				isImage = checkIfImage(requestLine[1]);
+				
 			}
 			else if(requestType.equals(HttpRequestType.TRACE)){
 				type = HttpRequestType.TRACE;
 			}
 			//else{}
 			
-			reqObj = new HTTPRequest(requestHeaders, params, type);
+			reqObj = new HTTPRequest(i_httpRequest,requestHeaders, params, type, isImage);
 		}
 		
 		
@@ -47,10 +52,31 @@ public class Parser {
 		return reqObj;
 	}
 	
+	
+	private static boolean checkIfImage(String URI){
+		String[] acceptedExtensions = {".bmp", ".jpg", ".gif", ".png"};
+		int minExtLength = 4;
+		boolean imageFound = false;
+		
+		// if the uri length is less then 4 then it is not a file min length of extension is 4 without the file name
+		if(URI.length() > minExtLength) {
+			String tempExt = URI.substring(URI.length() - minExtLength);
+			for(int i = 0; i < acceptedExtensions.length; i++){
+				if(tempExt.equals(acceptedExtensions[i])){
+					imageFound = true;
+				}
+			}
+		}
+		return imageFound;
+	}
+	
 	private static boolean verifyValidRequestLine(String[] reqLine, HashMap<String, String> headersMap){
 		boolean valid = false;
 		if(reqLine.length == 3){
 			valid = true;
+			if(reqLine[1].indexOf("/") == 0 && reqLine[1].length() > 1){
+				reqLine[1] = reqLine[1].substring(1);
+			}
 			headersMap.put("RequestType", reqLine[0]);
 			headersMap.put("URI", reqLine[1]);
 			headersMap.put("HTTPVersion", reqLine[2]);

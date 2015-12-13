@@ -23,6 +23,7 @@ public class HTTPResponse {
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
 	{
 		m_Response = "";
+		m_responseStatusCode = HTTPResponseCode.OK;//
 
 		if (i_HttpRequest.get("erros").equals(HTTPResponseCode.BAD_REQUEST)) 
 		{
@@ -58,18 +59,18 @@ public class HTTPResponse {
 	{
 
 		// Construct the first status line
-		m_Response += m_HttpVersion;
+		m_Response += m_HttpVersion + " ";
 
 		if (m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST)) 
 		{
-			m_Response += m_responseStatusCode;
+			m_Response += m_responseStatusCode + "\r\n";
 			return m_Response;
 		}
 		else
 		{
 			constructResponseCode();
-			m_Response += (m_responseStatusCode +
-					"\n" + m_ContentType + "\n" + 
+			m_Response += (m_responseStatusCode + 
+					"\r\n" + m_ContentType + "\r\n" + 
 					v_ContentLength + m_ContentLength);
 		}
 
@@ -103,8 +104,9 @@ public class HTTPResponse {
 	private boolean checkResource(String i_RequestedPage) {
 
 		// TODO Handle the case windows or mac senarios
-
-		String pathname = ConfigurationObject.getRoot() + "/" + i_RequestedPage;
+		System.out.println(i_RequestedPage);
+		String pathname = ConfigurationObject.getRoot() + "\\" + i_RequestedPage;
+		System.out.println(pathname);
 
 		File file = new File(pathname);
 
@@ -162,7 +164,10 @@ public class HTTPResponse {
 	}
 	
 	public String getPathToFile() {
-		if (m_PathTofile.equals(null)) {
+		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
+			return null;
+		}
+		if (m_PathTofile.equals("/")) {
 			return ConfigurationObject.getRoot() + "/" + "index.html";
 		}
 		return m_PathTofile;
