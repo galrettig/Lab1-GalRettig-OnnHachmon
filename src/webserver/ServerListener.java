@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -91,7 +92,7 @@ public class ServerListener {
 		String response = res.GenerateResponse();
 		try {
 			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-			writer.writeBytes((response + "/r/n/r/n"));
+			writer.writeBytes(response);
 			if(res.m_PathTofile != null){
 				byte[] fileToSend = readFile(new File(res.getPathToFile()));
 				
@@ -128,6 +129,7 @@ public class ServerListener {
 			{
 				fis.read(bFile, 0, bFile.length);
 			}
+			fis.close();
 			return bFile;
 		}
 		catch(FileNotFoundException e)
@@ -140,6 +142,8 @@ public class ServerListener {
 		}
 		return null;
 	}
+	
+	
 	
 	
 	

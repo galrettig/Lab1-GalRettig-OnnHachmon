@@ -71,7 +71,7 @@ public class HTTPResponse {
 			constructResponseCode();
 			m_Response += (m_responseStatusCode + 
 					"\r\n" + m_ContentType + "\r\n" + 
-					v_ContentLength + m_ContentLength );
+					v_ContentLength + m_ContentLength +"\r\n\r\n");
 		}
 
 		// TODO: Print the request Headers with the response
