@@ -25,7 +25,7 @@ public class HTTPResponse {
 		m_Response = "";
 		m_responseStatusCode = HTTPResponseCode.OK;//
 
-		if (i_HttpRequest.get("erros").equals(HTTPResponseCode.BAD_REQUEST)) 
+		if (i_HttpRequest.get("errors").equals(HTTPResponseCode.BAD_REQUEST)) 
 		{
 			m_ErrorsFoundInRequest = HTTPResponseCode.BAD_REQUEST;
 			m_responseStatusCode = HTTPResponseCode.BAD_REQUEST;

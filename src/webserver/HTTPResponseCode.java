@@ -25,6 +25,7 @@ public enum HTTPResponseCode {
 		return null;
 	}
 
+	
 	public String displayName() { return displayName; }
 }
 

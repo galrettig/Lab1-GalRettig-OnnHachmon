@@ -42,9 +42,9 @@ public class HTTPRequest {
 				m_errorCodeIfOccured = 4;
 				
 			} else {
-				this.m_RequestType = checkIfMethodAcceptable(requestLine[0]);
 				this.m_RequestedPage = requestLine[1];
 				this.m_HTTPver = requestLine[2];
+				this.m_RequestType = checkIfMethodAcceptable(requestLine[0]);//has to be last
 				
 				if(!HttpRequestType.OTHER.equals(this.m_RequestType)){
 					//can fully parse headers
@@ -72,8 +72,12 @@ public class HTTPRequest {
 		if(this.m_requestHeaders.containsKey("User-Agent")){
 			this.m_ReferrerHeader = this.m_requestHeaders.get("User-Agent");
 		}
+		m_requestHeaders.put("URI", this.m_RequestedPage);
+		m_requestHeaders.put("HTTPVersion", this.m_HTTPver);
+		m_requestHeaders.put("RequestType", m_RequestType.displayName());
 		
-		m_requestHeaders.put("erros", this.m_RequestType);
+		
+		m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 		
 		
 		if(!m_RequestedPage.equals("/")){
@@ -81,7 +85,7 @@ public class HTTPRequest {
 			if(indexOfExt > -1){
 				m_requestHeaders.put("extension", m_RequestedPage.substring(indexOfExt + 1));
 			} else {
-				m_requestHeaders.replace("erros", "400 Bad Request");
+				m_requestHeaders.replace("errors", "400 Bad Request");
 			}
 
 		} else {
@@ -149,6 +153,7 @@ public class HTTPRequest {
 		m_originalRequest = originalRequest;
 		this.m_RequestType = type;
 		this.m_RequestedPage = reqData.get("URI");
+		
 		this.m_HTTPver = reqData.get("HTTPVersion");
 		this.m_HttpRequestParams = params;
 		if(reqData.containsKey("Content-Length")){
@@ -166,14 +171,14 @@ public class HTTPRequest {
 		}
 
 		v_IsImage = isImage;
-		m_requestHeaders.put("erros", "none");
+		m_requestHeaders.put("errors", "none");
 
 		if(!m_RequestedPage.equals("/")){
 			int indexOfExt = m_RequestedPage.indexOf(".");
 			if(indexOfExt > -1){
 				m_requestHeaders.put("extension", m_RequestedPage.substring(indexOfExt + 1));
 			} else {
-				m_requestHeaders.replace("erros", "400 Bad Request");
+				m_requestHeaders.replace("errors", "400 Bad Request");
 			}
 
 		} else {

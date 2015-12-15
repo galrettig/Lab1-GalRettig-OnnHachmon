@@ -233,7 +233,7 @@ public class Parser {
 		String parsedURI = "";
 		int indexOfSeperator = i_URI.indexOf("?");
 		if(indexOfSeperator > -1){
-			String[] URIandParams = i_URI.split("?");
+			String[] URIandParams = i_URI.split("\\?");
 			if(URIandParams.length == 2){
 				params = handleEncodedParams(URIandParams[1]);
 				parsedURI = URIandParams[0];
@@ -294,6 +294,7 @@ public class Parser {
 
 	
 
+	
 
 	
 	private static void handleRequestErrors(){

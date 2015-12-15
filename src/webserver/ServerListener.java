@@ -38,7 +38,8 @@ public class ServerListener {
 	public void handleReadingFromSocket(ServerSocket serverSoc){
 		Socket connection;
 		BufferedReader inputClient;
-		String line, fullRequest = "", messageBodyString = null;
+		String line, fullRequest = "";
+		String messageBodyString = null;
 		int contentLength = -1;
 		char[] msgBody;
 		StringBuilder messageBodyBuilder = null;
@@ -72,12 +73,12 @@ public class ServerListener {
 					for(int i = 0; i < msgBody.length; i++){
 						messageBodyBuilder.append(msgBody[i]);
 					}
-					messageBodyString = messageBodyString.toString();
+					messageBodyString = messageBodyBuilder.toString();
 					//System.out.println("message body = " + messageBodyStr.toString());
 					//fullRequest += messageBodyStr.toString();
 				}
 				//System.out.println(fullRequest);//full request obtained
-				HTTPResponse res = this.handleRequest(fullRequest, messageBodyString);
+				HTTPResponse res = this.handleRequest(fullRequest, messageBodyString, contentLength);
 				handleResponse(res, connection);
 				
 			}
@@ -109,9 +110,12 @@ public class ServerListener {
 		}
 	}
 	
-	public HTTPResponse handleRequest(String i_fullRequest, String msgBody){
+	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
 		
-		HTTPRequest req = Parser.parseHttp(i_fullRequest, msgBody);
+		/*HTTPRequest req = Parser.parseHttp(i_fullRequest, msgBody);
+		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
+		return res;*/
+		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
 		return res;
 	}
