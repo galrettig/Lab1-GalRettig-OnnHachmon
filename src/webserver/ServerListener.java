@@ -94,7 +94,7 @@ public class ServerListener {
 		try {
 			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
 			writer.writeBytes(response);
-			if(res.m_PathTofile != null){
+			if(res.getPathToFile() != null){
 				byte[] fileToSend = readFile(new File(res.getPathToFile()));
 				
 				writer.flush();

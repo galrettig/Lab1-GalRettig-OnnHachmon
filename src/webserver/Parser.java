@@ -1,114 +1,8 @@
 package webserver;
-import java.net.Authenticator.RequestorType;
 import java.util.HashMap;
 
 public class Parser {
 
-	
-	
-	public static void parseRequest(String i_httpRequest){
-		
-		
-		String[] requestAsArray = SplitRequestToLinesIfAcceptable(i_httpRequest);
-		if(requestAsArray != null){
-			String[] requestLine = SplitRequestLineToHeadersIfAcceptable(requestAsArray[0]);
-			if(requestLine != null){
-				HttpRequestType methodType = checkIfMethodAcceptable(requestLine[0]);
-			}
-		}
-		
-		
-		/*
-		HashMap<String, String> params = new HashMap<>();
-		boolean isImage = false;
-		
-		String[] requestSplitted = i_httpRequest.split("\n");
-		String[] requestLine = requestSplitted[0].split(" ");
-		HashMap<String, String> requestHeaders = breakRequestStringToHeaders(requestSplitted);
-		HttpRequestType type = HttpRequestType.OTHER;
-		
-		if(verifyValidRequestLine(requestLine, requestHeaders)){
-			String requestType = requestLine[0];
-			if(requestType.equals(HttpRequestType.GET)){
-				requestLine[1] = parseGetRequest(requestLine[1], params);
-				type = HttpRequestType.GET;
-				isImage = checkIfImage(requestLine[1]);
-			} 
-			else if(requestType.equals(HttpRequestType.POST)){
-				parsePostRequest(msgBody, params);
-				type = HttpRequestType.POST;
-				isImage = checkIfImage(requestLine[1]);
-				
-			}
-			else if(requestType.equals(HttpRequestType.HTTP_HEAD)){
-				requestLine[1] = parseGetRequest(requestLine[1], params);
-				type = HttpRequestType.HTTP_HEAD;
-				isImage = checkIfImage(requestLine[1]);
-				
-			}
-			else if(requestType.equals(HttpRequestType.TRACE)){
-				type = HttpRequestType.TRACE;
-			}
-			//else{}
-			
-			//reqObj = new HTTPRequest(i_httpRequest,requestHeaders, params, type, isImage);
-		}
-		*/
-		
-		
-		
-		
-
-	}
-	
-
-	public static HTTPRequest parseHttp(String i_httpRequest, String msgBody){
-		
-		HTTPRequest reqObj = null;
-		HashMap<String, String> params = new HashMap<>();
-		boolean isImage = false;
-		
-		String[] requestSplitted = i_httpRequest.split("\n");
-		String[] requestLine = requestSplitted[0].split(" ");
-		HashMap<String, String> requestHeaders = breakRequestStringToHeaders(requestSplitted);
-		HttpRequestType type = HttpRequestType.OTHER;
-		
-		if(verifyValidRequestLine(requestLine, requestHeaders)){
-			String requestType = requestLine[0];
-			if(requestType.equals(HttpRequestType.GET)){
-				requestLine[1] = parseGetRequest(requestLine[1], params);
-				type = HttpRequestType.GET;
-				isImage = checkIfImage(requestLine[1]);
-			} 
-			else if(requestType.equals(HttpRequestType.POST)){
-				parsePostRequest(msgBody, params);
-				type = HttpRequestType.POST;
-				isImage = checkIfImage(requestLine[1]);
-				
-			}
-			else if(requestType.equals(HttpRequestType.HTTP_HEAD)){
-				requestLine[1] = parseGetRequest(requestLine[1], params);
-				type = HttpRequestType.HTTP_HEAD;
-				isImage = checkIfImage(requestLine[1]);
-				
-			}
-			else if(requestType.equals(HttpRequestType.TRACE)){
-				type = HttpRequestType.TRACE;
-			}
-			//else{}
-			
-			reqObj = new HTTPRequest(i_httpRequest,requestHeaders, params, type, isImage);
-		}
-		
-		
-		
-		
-		
-
-
-		return reqObj;
-	}
-	
 	
 	static boolean checkIfImage(String URI){
 		String[] acceptedExtensions = {".bmp", ".jpg", ".gif", ".png"};
@@ -126,7 +20,39 @@ public class Parser {
 		}
 		return imageFound;
 	}
+	
+	static String getExtensionFromFileName(String fileName){
+		if(fileName == null) { return null; }
+		
+		String extension = null;
+		int indexOfExt = fileName.indexOf(".");
+		
+		if(!fileName.equals("/") && indexOfExt > -1){
+			extension = fileName.substring(indexOfExt + 1);
+		} else {
+			extension = "html";
+		}
+		
+		return extension;
+	}
 
+	
+	static boolean checkIfRequestIsParsable(String i_fullRequest){
+		boolean parsable = false;
+		int indexOfNewLine = i_fullRequest.indexOf("\n");
+		if(indexOfNewLine > -1){
+			String firstLineSubString = i_fullRequest.substring(0, indexOfNewLine);
+			if(firstLineSubString.indexOf(" ") > -1){
+				if(firstLineSubString.split(" ").length == 3){
+					parsable = true;
+				}
+			}
+		}
+		return parsable;
+		
+	}
+	
+	
 	
 	
 	// check if the the request-line is acceptable , returns the the headers of the request-line splitted to spaces into array
@@ -137,6 +63,7 @@ public class Parser {
 			String[] requestLineHeadersTemp = i_requestLine.split(" ");
 			if(requestLineHeadersTemp.length == 3){
 				requestLineHeaders = requestLineHeadersTemp;
+				requestLineHeaders[1] = getCorrectPagePath(requestLineHeaders[1]);
 			}
 		}
 		return requestLineHeaders;
@@ -180,23 +107,6 @@ public class Parser {
 		return returnValue;
 	}
 	
-	private static boolean verifyValidRequestLine(String[] reqLine, HashMap<String, String> headersMap){
-		boolean valid = false;
-		if(reqLine.length == 3){
-			valid = true;
-			if(reqLine[1].indexOf("/") == 0 && reqLine[1].length() > 1){
-				reqLine[1] = reqLine[1].substring(1);
-			}
-			headersMap.put("RequestType", reqLine[0]);
-			headersMap.put("URI", reqLine[1]);
-			headersMap.put("HTTPVersion", reqLine[2]);
-		}
-		return valid;
-	}
-	
-	
-	
-	
 	
 
 	static HashMap<String, String> breakRequestStringToHeaders(String[] requestHeaders){
@@ -229,25 +139,21 @@ public class Parser {
 	}
 	
 	
-	static String parseGetRequest(String i_URI, HashMap<String, String> params) {
-		String parsedURI = "";
+	static String[] parseGetRequest(String i_URI) {
 		int indexOfSeperator = i_URI.indexOf("?");
 		if(indexOfSeperator > -1){
 			String[] URIandParams = i_URI.split("\\?");
 			if(URIandParams.length == 2){
-				params = handleEncodedParams(URIandParams[1]);
-				parsedURI = URIandParams[0];
-				
+
+				return URIandParams;
 			}
-		} else {
-			parsedURI = i_URI;
-			params = null;
+				
 		}
-		
-		return parsedURI;
+		return null;
 	}
 	
-	private static HashMap<String, String> handleEncodedParams(String paramsEncoded){
+	
+	static HashMap<String, String> handleEncodedParams(String paramsEncoded){
 		String[] paramsTuples = breakEncodedParamsToTuples(paramsEncoded);
 		return extractTupleParmas(paramsTuples);
 	}
@@ -291,6 +197,13 @@ public class Parser {
 		System.out.println(i_httpRequest);
 	}
 
+
+	private static String getCorrectPagePath(String url){
+		if(url.length() == 1 && url.indexOf("/") == 0){
+			return "/index.html";
+		}
+		return url;
+	}
 
 	
 
