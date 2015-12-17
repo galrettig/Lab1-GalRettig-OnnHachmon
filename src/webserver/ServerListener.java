@@ -35,17 +35,16 @@ public class ServerListener {
 
 	
 	public void handleReadingFromSocket(ServerSocket serverSoc){
-		Socket connection;
-		BufferedReader inputClient;
-		String line, fullRequest = "";
-		String messageBodyString = null;
-		int contentLength = -1;
-		char[] msgBodyCharBuffer;
-		StringBuilder messageBodyBuilder = null;
 		
-		try {
-			
 			while(true) {
+				Socket connection;
+				BufferedReader inputClient;
+				String line, fullRequest = "";
+				String messageBodyString = null;
+				int contentLength = -1;
+				char[] msgBodyCharBuffer;
+				StringBuilder messageBodyBuilder = null;
+				try {
 
 				connection = serverSoc.accept();
 				fullRequest = "";
@@ -86,12 +85,12 @@ public class ServerListener {
 				//System.out.println(fullRequest);//full request obtained
 				HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
 				handleResponse(http_response, connection);
-				
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				} 
 			}
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		} 
+		
 	}
 
 
