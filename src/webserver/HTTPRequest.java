@@ -53,13 +53,7 @@ public class HTTPRequest {
 				this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 			}
 		}
-
-
-
-
-
 	}
-	
 	
 
 	private void handleRequestHeaders(String[] request){

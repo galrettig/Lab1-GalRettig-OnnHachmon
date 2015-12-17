@@ -101,14 +101,12 @@ public class HTTPResponse {
 
 	private boolean checkResource(String i_RequestedPage) {
 		
-		String localpath = constructAndParseLocalPath(i_RequestedPage);
-		localpath.replace('/', '\\');
-		 
+		String pathname = ConfigurationObject.getRoot() + i_RequestedPage;
 		
-		// TODO Handle the case windows or mac senarios
-		String pathname = ConfigurationObject.getRoot() + "\\" + localpath;
+		pathname = pathname.replace('/', '\\');
+		
 		System.out.println(pathname);
-
+		
 		File file = new File(pathname);
 
 		try 
@@ -126,17 +124,6 @@ public class HTTPResponse {
 			return false;
 		}
 		return false;
-	}
-
-	// TODO: for Testing need to del
-	private String constructAndParseLocalPath(String i_RequestedPage) {
-		// TODO Auto-generated method stub
-		System.out.println("printing from response contructAndParseLocalPath");
-		System.out.println(i_RequestedPage);
-		String result = i_RequestedPage.substring(i_RequestedPage.indexOf('0') + 4);
-		System.out.println(i_RequestedPage);
-		return result;
-		
 	}
 
 	private String constructExtensionToContentType()
