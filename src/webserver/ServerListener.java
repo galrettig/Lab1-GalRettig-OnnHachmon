@@ -15,17 +15,17 @@ import java.net.Socket;
 
 public class ServerListener {
 
-	private String ContentLengthHeader = "Content-Length: ";
+	private final String ContentLengthHeader = "Content-Length: ";
 
+	// Open Socket From Configuration Object And Read Input
 	public void runListener(ConfigurationObject i_confObject)
 	{
 		ServerSocket serverSoc;
 		try {
 
-			serverSoc = new ServerSocket(Integer.parseInt(i_confObject.m_Port));
+			serverSoc = new ServerSocket(Integer.parseInt(i_confObject.getPortNumber()));
 
 			while(true) {
-
 				handleReadingFromSocket(serverSoc);
 			}
 		} catch (IOException e) {
@@ -41,45 +41,52 @@ public class ServerListener {
 		String line, fullRequest = "";
 		String messageBodyString = null;
 		int contentLength = -1;
-		char[] msgBody;
+		char[] msgBodyCharBuffer;
 		StringBuilder messageBodyBuilder = null;
-
+		
 		try {
-
+			
 			while(true) {
 
 				connection = serverSoc.accept();
 				fullRequest = "";
 				inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				line = inputClient.readLine();
-
-
+				
+				// Read Request According to Http Protocol
 				while(line != null && !line.equals(""))
 				{
+					// Check For Request With A Body Message
 					if(line.indexOf(ContentLengthHeader) > -1){
-						String leng = line.substring(ContentLengthHeader.length());
-						contentLength = Integer.parseInt(leng);
+						String bodyContentLengthAsString = line.substring(ContentLengthHeader.length());
+						contentLength = Integer.parseInt(bodyContentLengthAsString);
 					}
 
 					fullRequest += (line + "\n");
 					line = inputClient.readLine();
 				}
 				
+				// Handle With Request that Contain Body Message
 				if(contentLength > 0){
-					msgBody = new char[contentLength];
-					inputClient.read(msgBody);
+					msgBodyCharBuffer = new char[contentLength];
+					inputClient.read(msgBodyCharBuffer);
 					
 					messageBodyBuilder = new StringBuilder();
-					for(int i = 0; i < msgBody.length; i++){
-						messageBodyBuilder.append(msgBody[i]);
+					
+					for(int i = 0; i < msgBodyCharBuffer.length; i++)
+					{
+						messageBodyBuilder.append(msgBodyCharBuffer[i]);
 					}
+					
 					messageBodyString = messageBodyBuilder.toString();
+					
+					// TODO: Del
 					//System.out.println("message body = " + messageBodyStr.toString());
 					//fullRequest += messageBodyStr.toString();
 				}
 				//System.out.println(fullRequest);//full request obtained
-				HTTPResponse res = this.handleRequest(fullRequest, messageBodyString, contentLength);
-				handleResponse(res, connection);
+				HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
+				handleResponse(http_response, connection);
 				
 			}
 		} catch (IOException e) {
@@ -90,10 +97,15 @@ public class ServerListener {
 
 
 	public void handleResponse(HTTPResponse res, Socket connection){
+		
 		String response = res.GenerateResponse();
+		
 		try {
 			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
 			writer.writeBytes(response);
+			
+			// TODO: Add here the option how to send the file Regular or Chuncked
+			// Send The File and Close Response As Http protocol request
 			if(res.getPathToFile() != null){
 				byte[] fileToSend = readFile(new File(res.getPathToFile()));
 				
@@ -103,6 +115,7 @@ public class ServerListener {
 				writer.writeBytes("/r/n");
 				writer.flush();
 			}
+			
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -110,11 +123,14 @@ public class ServerListener {
 		}
 	}
 	
+	// TODO: check if it's right to create http response here
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
 		
+		// TODO: Del
 		/*HTTPRequest req = Parser.parseHttp(i_fullRequest, msgBody);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
 		return res;*/
+		
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
 		return res;

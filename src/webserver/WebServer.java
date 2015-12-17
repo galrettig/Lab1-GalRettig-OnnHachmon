@@ -32,10 +32,11 @@ public class WebServer {
 		
 	}
 
-	//TODO: delete
+	//TODO: delete ?????? 
 	public static void readFile()
 	{
-		Path file = FileSystems.getDefault().getPath("C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration", "myWebConf.ini");
+		// gal path: C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration
+		Path file = FileSystems.getDefault().getPath("C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration", "myWebConf.ini");
 		StringBuilder fileData = new StringBuilder("");
 		try (InputStream in = Files.newInputStream(file);
 				BufferedReader reader =
@@ -59,7 +60,8 @@ public class WebServer {
 		HashMap<String, String> confList = new HashMap<>();
 		
 		// Change Path For Windows
-		String pathToConfIniFile = "C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration\\myWebconf.ini";
+		// Gal Path: C:\Users\gal\workspace\Lab1-GalRettig-OnnHachmon\configuration\myWebconf.ini
+		String pathToConfIniFile = "C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\mywebconf.ini";
 
 		try {
 			input = new FileInputStream(pathToConfIniFile);

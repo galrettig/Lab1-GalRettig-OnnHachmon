@@ -29,7 +29,6 @@ public class HTTPResponse {
 		{
 			m_ErrorsFoundInRequest = HTTPResponseCode.BAD_REQUEST;
 			m_responseStatusCode = HTTPResponseCode.BAD_REQUEST;
-			// bla bla bla
 		}
 		else 
 		{
@@ -51,25 +50,24 @@ public class HTTPResponse {
 	public String GenerateResponse() 
 	{
 		String result = constructResponse();
-		System.out.println(result);
+		//System.out.println(result);
 		return result;
 	}
 	
 	private String constructResponse() 
 	{
-
 		// Construct the first status line
 		m_Response += m_HttpVersion + " ";
 
 		if (m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST)) 
 		{
-			m_Response += m_responseStatusCode + "\r\n";
+			m_Response += m_responseStatusCode.displayName() + "\r\n";
 			return m_Response;
 		}
 		else
 		{
 			constructResponseCode();
-			m_Response += (m_responseStatusCode + 
+			m_Response += (m_responseStatusCode.displayName() + 
 					"\r\n" + m_ContentType + "\r\n" + 
 					v_ContentLength + m_ContentLength +"\r\n\r\n");
 		}
@@ -102,10 +100,13 @@ public class HTTPResponse {
 
 
 	private boolean checkResource(String i_RequestedPage) {
-
+		
+		String localpath = constructAndParseLocalPath(i_RequestedPage);
+		localpath.replace('/', '\\');
+		 
+		
 		// TODO Handle the case windows or mac senarios
-		System.out.println(i_RequestedPage);
-		String pathname = ConfigurationObject.getRoot() + "\\" + i_RequestedPage;
+		String pathname = ConfigurationObject.getRoot() + "\\" + localpath;
 		System.out.println(pathname);
 
 		File file = new File(pathname);
@@ -127,6 +128,13 @@ public class HTTPResponse {
 		return false;
 	}
 
+	// TODO: for Testing need to del
+	private String constructAndParseLocalPath(String i_RequestedPage) {
+		// TODO Auto-generated method stub
+		String result = i_RequestedPage.substring(i_RequestedPage.indexOf('0') + 4);
+		return result;
+		
+	}
 
 	private String constructExtensionToContentType()
 	{
@@ -164,9 +172,12 @@ public class HTTPResponse {
 	}
 	
 	public String getPathToFile() {
+		
+		//TODO: Add here what to return in case of bad request
 		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
 			return null;
 		}
+		//TODO: change the condition because it's not coming parsed like this.
 		if (m_PathTofile.equals("/")) {
 			return ConfigurationObject.getRoot() + "/" + "index.html";
 		}

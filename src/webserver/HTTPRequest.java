@@ -7,7 +7,7 @@ public class HTTPRequest {
 	HttpRequestType m_RequestType;
 	// Requested Page (/ or /index.html etc.)
 	String m_RequestedPage;
-	// Is Image – if the requested page has an extension of an image (jpg, bmp, gif...)
+	// Is Image if the requested page has an extension of an image (jpg, bmp, gif...)
 	Boolean v_IsImage;
 	// Content Length that is written in the request
 	int m_contentLength;
@@ -29,11 +29,13 @@ public class HTTPRequest {
 	public HTTPRequest(String io_originalRequest, String io_httpMessageBody, int contentLength){
 		m_originalRequest = io_originalRequest;
 		m_httpMessageBody = io_httpMessageBody;
-
+		
+		// Parse the Raw Request and check it
 		if(!Parser.checkIfRequestIsParsable(io_originalRequest)){
 			m_errorCodeIfOccured = 4;
 			this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 		} else {
+			
 			String[] requestAsArray = Parser.SplitRequestToLinesIfAcceptable(m_originalRequest);
 			String[] requestLine = Parser.SplitRequestLineToHeadersIfAcceptable(requestAsArray[0]);
 
@@ -75,7 +77,6 @@ public class HTTPRequest {
 
 
 		m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
-
 		handleFileExtension();
 
 
@@ -91,10 +92,11 @@ public class HTTPRequest {
 		}
 	}
 
+	//TODO: handle file extension errors
 	private void handleFileExtensionErrors(){
 		if(m_requestHeaders.get("errors").equals("none")){
 			HTTPResponseCode BadReqcode = HTTPResponseCode.BAD_REQUEST;
-			m_requestHeaders.replace("errors", BadReqcode.displayName());
+			//m_requestHeaders.replace("errors", BadReqcode.displayName());
 		}
 	}
 
@@ -127,20 +129,21 @@ public class HTTPRequest {
 	}
 
 	private void handleGetRequest(){
+		
+		// Seperate the parmas in the request if there are many
 		if(m_RequestedPage.indexOf("?") != -1){
 			String[] pageBrokenToQuery = Parser.parseGetRequest(m_RequestedPage);
+			
 			if(pageBrokenToQuery == null) {
 				m_errorCodeIfOccured = 4;
 				handleErroredRequest();
 			} else {
 				m_RequestedPage = pageBrokenToQuery[0];
 				m_HttpRequestParams = Parser.handleEncodedParams(pageBrokenToQuery[1]);
-
 			}
 		}
-
-
 	}
+	
 	private void handlePostRequest(){
 		if(this.m_httpMessageBody != null){
 			if(this.m_httpMessageBody.length() > 0){

@@ -215,6 +215,12 @@ public class Parser {
 		System.out.println("some error");
 	}
 
+	// TODO: think if here or in somewhere else
+	public static String parseAndConstructLocalPath(String i_RequestedPage)
+	{
+		
+		return null;
+	}
 
 
 

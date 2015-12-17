@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class ConfigurationObject {
 
-	String m_Port;
+	private String m_Port;
 	String m_defaultPage;
 	String m_MaxThreads;
 	private static String m_defaultPageFullUrl;
@@ -26,6 +26,11 @@ public class ConfigurationObject {
 	public static String getDefaultPage()
 	{
 		return m_defaultPageFullUrl;
+	}
+	
+	public String getPortNumber()
+	{
+		return m_Port;
 	}
 	
 }
