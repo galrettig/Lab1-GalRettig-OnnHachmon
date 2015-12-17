@@ -131,7 +131,10 @@ public class HTTPResponse {
 	// TODO: for Testing need to del
 	private String constructAndParseLocalPath(String i_RequestedPage) {
 		// TODO Auto-generated method stub
+		System.out.println("printing from response contructAndParseLocalPath");
+		System.out.println(i_RequestedPage);
 		String result = i_RequestedPage.substring(i_RequestedPage.indexOf('0') + 4);
+		System.out.println(i_RequestedPage);
 		return result;
 		
 	}

@@ -32,6 +32,7 @@ public class HTTPRequest {
 		
 		// Parse the Raw Request and check it
 		if(!Parser.checkIfRequestIsParsable(io_originalRequest)){
+			m_requestHeaders = new HashMap<>();
 			m_errorCodeIfOccured = 4;
 			this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 		} else {
