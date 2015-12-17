@@ -36,8 +36,8 @@ public class WebServer {
 	public static void readFile()
 	{
 		// gal path: C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration
-		//Path file = FileSystems.getDefault().getPath("C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration", "myWebConf.ini");
-		Path file = FileSystems.getDefault().getPath("C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration", "myWebConf.ini");
+		Path file = FileSystems.getDefault().getPath("C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration", "myWebConf.ini");
+		//Path file = FileSystems.getDefault().getPath("C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration", "myWebConf.ini");
 		StringBuilder fileData = new StringBuilder("");
 		try (InputStream in = Files.newInputStream(file);
 				BufferedReader reader =
