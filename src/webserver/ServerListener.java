@@ -24,8 +24,10 @@ public class ServerListener {
 		try {
 
 			serverSoc = new ServerSocket(Integer.parseInt(i_confObject.getPortNumber()));
-			handleReadingFromSocket(serverSoc);
-			
+
+			while(true) {
+				handleReadingFromSocket(serverSoc);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

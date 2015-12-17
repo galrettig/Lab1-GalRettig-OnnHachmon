@@ -14,4 +14,3 @@ bin/webserver/HTTPResponse.class
 *.class
 configuration/myWebconf.ini
 configuration/myWebconf.ini
-*.class

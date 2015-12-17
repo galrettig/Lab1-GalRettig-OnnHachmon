@@ -66,7 +66,7 @@ public class WebServer {
 		// Change Path For Windows
 		// Gal Path: C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration\\myWebconf.ini
 		//C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\mywebconf.ini";
-		String pathToConfIniFile = "C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\myWebconf.ini";
+		String pathToConfIniFile = "C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration\\myWebconf.ini";
 
 		try {
 			input = new FileInputStream(pathToConfIniFile);
