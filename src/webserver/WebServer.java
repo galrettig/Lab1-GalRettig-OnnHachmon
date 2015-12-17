@@ -23,6 +23,9 @@ public class WebServer {
 		// create configuration object
 		m_appConfigObject = new ConfigurationObject(readConfFile());
 		
+		if(m_appConfigObject.getPortNumber() == null){
+			throw new IOException("cannot resolve config file");
+		}
 		// create listener
 		webSrv = new ServerListener();
 		webSrv.runListener(m_appConfigObject);
@@ -61,8 +64,9 @@ public class WebServer {
 		HashMap<String, String> confList = new HashMap<>();
 		
 		// Change Path For Windows
-		// Gal Path: C:\Users\gal\workspace\Lab1-GalRettig-OnnHachmon\configuration\myWebconf.ini
-		String pathToConfIniFile = "C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\mywebconf.ini";
+		// Gal Path: C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration\\myWebconf.ini
+		//C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\mywebconf.ini";
+		String pathToConfIniFile = "C:\\Users\\gal\\workspace\\Lab1-GalRettig-OnnHachmon\\configuration\\myWebconf.ini";
 
 		try {
 			input = new FileInputStream(pathToConfIniFile);
