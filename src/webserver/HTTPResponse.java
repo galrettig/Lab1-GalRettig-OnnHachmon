@@ -20,6 +20,7 @@ public class HTTPResponse {
 	String v_ContentLength = "Content-Length: ";
 	String m_PathTofile;
 	boolean m_fileIsExpected = true;
+	
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
 	{
@@ -33,20 +34,28 @@ public class HTTPResponse {
 			m_ErrorsFoundInRequest = HTTPResponseCode.BAD_REQUEST;
 			m_responseStatusCode = HTTPResponseCode.BAD_REQUEST;
 		}
+		
 		else 
 		{
 			m_HttpVersion = i_HttpRequest.get("HTTPVersion");
-
+			m_RequestType = i_HttpRequest.get("RequestType");
 			// TODO: transfer the extension from the parse
 			m_ContentExtension = i_HttpRequest.get("extension");
-			
+
+			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
+				
+			}
+			else {
 			m_ContentType = constructExtensionToContentType();
 
 			m_RequestedPage = i_HttpRequest.get("URI");
 
-			m_RequestType = i_HttpRequest.get("RequestType");
+			
 			if(m_RequestType.equals(HttpRequestType.HTTP_HEAD.displayName())){
 				m_fileIsExpected = false;
+				
+			}
+		
 			}
 		}
 
@@ -59,7 +68,7 @@ public class HTTPResponse {
 		//System.out.println(result);
 		return result;
 	}
-	
+
 	private String constructResponse() 
 	{
 		// Construct the first status line
@@ -70,12 +79,16 @@ public class HTTPResponse {
 			m_Response += m_responseStatusCode.displayName() + "\r\n";
 			return m_Response;
 		}
+		else if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
+			
+		}
 		else
 		{
 			constructResponseCode();
 			m_Response += (m_responseStatusCode.displayName() + 
 					"\r\n" + m_ContentType + "\r\n" + 
 					v_ContentLength + m_ContentLength +"\r\n\r\n");
+
 		}
 
 		// TODO: Print the request Headers with the response
@@ -106,13 +119,13 @@ public class HTTPResponse {
 
 
 	private boolean checkResource(String i_RequestedPage) {
-		
+
 		String pathname = ConfigurationObject.getRoot() + i_RequestedPage;
-		
+
 		pathname = pathname.replace('/', '\\');
-		
+
 		System.out.println(pathname);
-		
+
 		File file = new File(pathname);
 
 		try 
@@ -166,9 +179,9 @@ public class HTTPResponse {
 		}
 		return m_ContentType;
 	}
-	
+
 	public String getPathToFile() {
-		
+
 		//TODO: Add here what to return in case of bad request
 		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
 			return null;
@@ -179,7 +192,7 @@ public class HTTPResponse {
 		}
 		return m_PathTofile;
 	}
-	
+
 	public boolean fileIsExpected(){
 		return m_fileIsExpected;
 	}
@@ -210,6 +223,6 @@ public class HTTPResponse {
 
 		return m_Response;
 	}
-	*/
+	 */
 
 }

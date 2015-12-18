@@ -70,6 +70,9 @@ public class HTTPRequest {
 		m_requestHeaders.put("URI", this.m_RequestedPage);
 		m_requestHeaders.put("HTTPVersion", this.m_HTTPver);
 		m_requestHeaders.put("RequestType", m_RequestType.displayName());
+		if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
+			m_requestHeaders.put("originalRequest", m_originalRequest);
+		}
 
 
 		m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
@@ -163,7 +166,10 @@ public class HTTPRequest {
 	
 	
 	
-	private void handleTraceRequest(){}
+	private void handleTraceRequest(){
+		
+		
+	}
 	private void handleErroredRequest(){}
 
 
