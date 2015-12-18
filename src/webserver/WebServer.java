@@ -18,17 +18,18 @@ public class WebServer {
 	public static void main(String[] args) throws IOException
 	{
 		ServerListener webSrv;
-		ConfigurationObject m_appConfigObject;
-		
+		HashMap<String, String> m_confList = new HashMap<>();
+		m_confList = readConfFile();
 		// create configuration object
-		m_appConfigObject = new ConfigurationObject(readConfFile());
+		//m_appConfigObject = new ConfigurationObject(readConfFile());
+		ConfigurationObject.getConfigurationObject().setup(m_confList);
 		
-		if(m_appConfigObject.getPortNumber() == null){
+		if(ConfigurationObject.getPortNumber() == null){
 			throw new IOException("cannot resolve config file");
 		}
 		// create listener
 		webSrv = new ServerListener();
-		webSrv.runListener(m_appConfigObject);
+		webSrv.runListener();
 		
 		// create http request
 		

@@ -10,44 +10,55 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerListener {
+public class ServerListener implements Runnable {
 
 	private final String ContentLengthHeader = "Content-Length: ";
 
+	//TODO: figure how to call runListener
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		runListener();
+	}	
+
 	// Open Socket From Configuration Object And Read Input
-	public void runListener(ConfigurationObject i_confObject)
+	public void runListener()
 	{
 		ServerSocket serverSoc;
 		try {
 
-			serverSoc = new ServerSocket(Integer.parseInt(i_confObject.getPortNumber()));
+			//TODO: Threads from here
+			serverSoc = new ServerSocket(Integer.parseInt(ConfigurationObject.getPortNumber()));
 			
-			handleReadingFromSocket(serverSoc);
-			
+			if (!serverSoc.isClosed()) {				
+				handleReadingFromSocket(serverSoc);
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
 
-	
+
 	public void handleReadingFromSocket(ServerSocket serverSoc){
-		
-			while(true) {
-				Socket connection;
-				BufferedReader inputClient;
-				String line, fullRequest = "";
-				String messageBodyString = null;
-				int contentLength = -1;
-				char[] msgBodyCharBuffer;
-				StringBuilder messageBodyBuilder = null;
-				try {
+
+		while(true) {
+			Socket connection;
+			BufferedReader inputClient;
+			String line, fullRequest = "";
+			String messageBodyString = null;
+			int contentLength = -1;
+			char[] msgBodyCharBuffer;
+			StringBuilder messageBodyBuilder = null;
+
+			try {
 
 				connection = serverSoc.accept();
 				fullRequest = "";
 				inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				line = inputClient.readLine();
-				
+
 				// Read Request According to Http Protocol
 				while(line != null && !line.equals(""))
 				{
@@ -60,21 +71,21 @@ public class ServerListener {
 					fullRequest += (line + "\n");
 					line = inputClient.readLine();
 				}
-				
+
 				// Handle With Request that Contain Body Message
 				if(contentLength > 0){
 					msgBodyCharBuffer = new char[contentLength];
 					inputClient.read(msgBodyCharBuffer);
-					
+
 					messageBodyBuilder = new StringBuilder();
-					
+
 					for(int i = 0; i < msgBodyCharBuffer.length; i++)
 					{
 						messageBodyBuilder.append(msgBodyCharBuffer[i]);
 					}
-					
+
 					messageBodyString = messageBodyBuilder.toString();
-					
+
 					// TODO: Del
 					//System.out.println("message body = " + messageBodyStr.toString());
 					//fullRequest += messageBodyStr.toString();
@@ -82,38 +93,38 @@ public class ServerListener {
 				//System.out.println(fullRequest);//full request obtained
 				HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
 				handleResponse(http_response, connection);
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				} 
-			}
-		
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			} 
+		}
+
 	}
 
 
 	public void handleResponse(HTTPResponse res, Socket connection){
-		
+
 		String response = res.GenerateResponse();
 		DataOutputStream writer;
 		try {
 			writer = new DataOutputStream(connection.getOutputStream());
 			System.out.println(response);
-			
+
 			if (connection.getOutputStream() != null ) {
-				
+
 				writer.writeBytes(response);
 				writer.flush();
-				
+
 				if(res.getPathToFile() != null && res.fileIsExpected()){
 					byte[] fileToSend = readFile(new File(res.getPathToFile()));
-					
+
 					writer.write(fileToSend, 0, fileToSend.length);
 					writer.flush();
-					
+
 				}
-		
+
 			}
-			
+
 			// TODO: Add here the option how to send the file Regular or Chuncked
 			// Send The File and Close Response As Http protocol request
 			writer.writeBytes("\r\n");
@@ -124,22 +135,22 @@ public class ServerListener {
 			e.printStackTrace();
 		} 
 	}
-	
+
 	// TODO: check if it's right to create http response here
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
-		
+
 		// TODO: Del
 		/*HTTPRequest req = Parser.parseHttp(i_fullRequest, msgBody);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
 		return res;*/
-		
+
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
 		return res;
 	}
-	
-	
-	
+
+
+
 	private byte[] readFile(File file)
 	{
 		try
@@ -163,5 +174,6 @@ public class ServerListener {
 			// do something
 		}
 		return null;
-	}	
+	}
+
 }
