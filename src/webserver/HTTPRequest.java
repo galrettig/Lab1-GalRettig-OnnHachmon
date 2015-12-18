@@ -39,7 +39,8 @@ public class HTTPRequest {
 			
 			String[] requestAsArray = Parser.SplitRequestToLinesIfAcceptable(m_originalRequest);
 			String[] requestLine = Parser.SplitRequestLineToHeadersIfAcceptable(requestAsArray[0]);
-
+			
+			
 			this.m_RequestedPage = requestLine[1];
 			this.m_HTTPver = requestLine[2];
 			this.m_RequestType = checkIfMethodAcceptable(requestLine[0]);//has to be last
@@ -156,6 +157,7 @@ public class HTTPRequest {
 
 
 	private void handleHeadRequest(){
+		
 		handleGetRequest();//same as get only not providing the message body
 	}
 	

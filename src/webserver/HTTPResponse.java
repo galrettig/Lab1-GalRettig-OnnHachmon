@@ -45,7 +45,7 @@ public class HTTPResponse {
 			m_RequestedPage = i_HttpRequest.get("URI");
 
 			m_RequestType = i_HttpRequest.get("RequestType");
-			if(m_RequestType.equals(HttpRequestType.HTTP_HEAD)){
+			if(m_RequestType.equals(HttpRequestType.HTTP_HEAD.displayName())){
 				m_fileIsExpected = false;
 			}
 		}
