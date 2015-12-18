@@ -92,11 +92,12 @@ public class HTTPRequest {
 	}
 
 	//TODO: handle file extension errors
+	//TODO: use the enum directly
 	private void handleFileExtensionErrors(){
 		if(m_requestHeaders.get("errors").equals("none")){
 			HTTPResponseCode BadReqcode = HTTPResponseCode.BAD_REQUEST;
 			//removed comment on the replace , check later
-			m_requestHeaders.replace("errors", BadReqcode.displayName());
+			m_requestHeaders.put("errors", BadReqcode.displayName());
 		}
 	}
 
