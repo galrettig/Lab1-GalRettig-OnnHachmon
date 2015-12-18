@@ -102,23 +102,22 @@ public class ServerListener {
 			if (connection.getOutputStream() != null ) {
 				
 				writer.writeBytes(response);
+				writer.flush();
 				
 				if(res.getPathToFile() != null){
 					byte[] fileToSend = readFile(new File(res.getPathToFile()));
 					
-					writer.flush();
 					writer.write(fileToSend, 0, fileToSend.length);
 					writer.flush();
-					writer.writeBytes("\r\n");
-					writer.flush();
-					writer.close();
+					
 				}
 		
 			}
 			
 			// TODO: Add here the option how to send the file Regular or Chuncked
 			// Send The File and Close Response As Http protocol request
-					
+			writer.writeBytes("\r\n");
+			writer.flush();
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
