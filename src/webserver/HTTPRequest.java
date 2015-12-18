@@ -155,7 +155,12 @@ public class HTTPRequest {
 
 
 
-	private void handleHeadRequest(){}
+	private void handleHeadRequest(){
+		handleGetRequest();//same as get only not providing the message body
+	}
+	
+	
+	
 	private void handleTraceRequest(){}
 	private void handleErroredRequest(){}
 
