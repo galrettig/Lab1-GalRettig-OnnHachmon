@@ -6,7 +6,7 @@ public class ConfigurationObject {
 
 	private String m_Port;
 	String m_defaultPage;
-	String m_MaxThreads;
+	private static String m_MaxThreads;
 	private static String m_defaultPageFullUrl;
 	private static String m_rootFolder;
 
@@ -31,6 +31,12 @@ public class ConfigurationObject {
 	public String getPortNumber()
 	{
 		return m_Port;
+	}
+	
+	public static int getMaxThreads()
+	{
+		return Integer.parseInt(m_MaxThreads);
+		
 	}
 	
 }
