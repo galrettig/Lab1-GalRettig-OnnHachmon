@@ -104,7 +104,7 @@ public class ServerListener {
 				writer.writeBytes(response);
 				writer.flush();
 				
-				if(res.getPathToFile() != null){
+				if(res.getPathToFile() != null && res.fileIsExpected()){
 					byte[] fileToSend = readFile(new File(res.getPathToFile()));
 					
 					writer.write(fileToSend, 0, fileToSend.length);

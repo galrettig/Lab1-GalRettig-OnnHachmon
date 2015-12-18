@@ -19,6 +19,7 @@ public class HTTPResponse {
 	String v_ContentType = "Content-Type: ";
 	String v_ContentLength = "Content-Length: ";
 	String m_PathTofile;
+	boolean m_fileIsExpected = true;
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
 	{
@@ -44,6 +45,9 @@ public class HTTPResponse {
 			m_RequestedPage = i_HttpRequest.get("URI");
 
 			m_RequestType = i_HttpRequest.get("RequestType");
+			if(m_RequestType.equals(HttpRequestType.HTTP_HEAD)){
+				m_fileIsExpected = false;
+			}
 		}
 
 	}
@@ -174,6 +178,10 @@ public class HTTPResponse {
 			return ConfigurationObject.getRoot() + "/" + "index.html";
 		}
 		return m_PathTofile;
+	}
+	
+	public boolean fileIsExpected(){
+		return m_fileIsExpected;
 	}
 
 	/*

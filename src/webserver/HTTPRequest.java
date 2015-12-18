@@ -91,7 +91,8 @@ public class HTTPRequest {
 	private void handleFileExtensionErrors(){
 		if(m_requestHeaders.get("errors").equals("none")){
 			HTTPResponseCode BadReqcode = HTTPResponseCode.BAD_REQUEST;
-			//m_requestHeaders.replace("errors", BadReqcode.displayName());
+			//removed comment on the replace , check later
+			m_requestHeaders.replace("errors", BadReqcode.displayName());
 		}
 	}
 
