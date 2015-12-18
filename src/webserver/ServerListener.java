@@ -29,7 +29,7 @@ public class ServerListener implements Runnable {
 
 			//TODO: Threads from here
 			serverSoc = new ServerSocket(Integer.parseInt(ConfigurationObject.getPortNumber()));
-			
+
 			if (!serverSoc.isClosed()) {				
 				handleReadingFromSocket(serverSoc);
 			}
@@ -92,7 +92,10 @@ public class ServerListener implements Runnable {
 				}
 				//System.out.println(fullRequest);//full request obtained
 				HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
-				handleResponse(http_response, connection);
+
+				if (connection.isConnected()) {
+					handleResponse(http_response, connection);					
+				}
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -107,10 +110,10 @@ public class ServerListener implements Runnable {
 		String response = res.GenerateResponse();
 		DataOutputStream writer;
 		try {
-			writer = new DataOutputStream(connection.getOutputStream());
-			System.out.println(response);
-
 			if (connection.getOutputStream() != null ) {
+				writer = new DataOutputStream(connection.getOutputStream());
+				System.out.println(response);
+
 
 				writer.writeBytes(response);
 				writer.flush();
@@ -123,13 +126,13 @@ public class ServerListener implements Runnable {
 
 				}
 
+				writer.writeBytes("\r\n");
+				writer.flush();
+				writer.close();
 			}
 
 			// TODO: Add here the option how to send the file Regular or Chuncked
 			// Send The File and Close Response As Http protocol request
-			writer.writeBytes("\r\n");
-			writer.flush();
-			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
