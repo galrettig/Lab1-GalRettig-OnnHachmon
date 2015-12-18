@@ -20,7 +20,8 @@ public class HTTPResponse {
 	String v_ContentLength = "Content-Length: ";
 	String m_PathTofile;
 	boolean m_fileIsExpected = true;
-	
+	String m_messageBody;
+
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
 	{
@@ -34,7 +35,7 @@ public class HTTPResponse {
 			m_ErrorsFoundInRequest = HTTPResponseCode.BAD_REQUEST;
 			m_responseStatusCode = HTTPResponseCode.BAD_REQUEST;
 		}
-		
+
 		else 
 		{
 			m_HttpVersion = i_HttpRequest.get("HTTPVersion");
@@ -43,19 +44,22 @@ public class HTTPResponse {
 			m_ContentExtension = i_HttpRequest.get("extension");
 
 			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
-				
+				if(i_HttpRequest.containsKey("originalRequest")){
+					m_messageBody = i_HttpRequest.get("originalRequest");
+					m_fileIsExpected = false;
+				}
 			}
 			else {
-			m_ContentType = constructExtensionToContentType();
+				m_ContentType = constructExtensionToContentType();
 
-			m_RequestedPage = i_HttpRequest.get("URI");
+				m_RequestedPage = i_HttpRequest.get("URI");
 
-			
-			if(m_RequestType.equals(HttpRequestType.HTTP_HEAD.displayName())){
-				m_fileIsExpected = false;
-				
-			}
-		
+
+				if(m_RequestType.equals(HttpRequestType.HTTP_HEAD.displayName())){
+					m_fileIsExpected = false;
+
+				}
+
 			}
 		}
 
@@ -80,7 +84,10 @@ public class HTTPResponse {
 			return m_Response;
 		}
 		else if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
-			
+			constructResponseCodeTrace();
+			m_Response += (m_responseStatusCode.displayName() + 
+					"\r\n" + m_ContentType + "\r\n" + 
+					v_ContentLength + m_ContentLength +"\r\n\r\n" + m_messageBody);
 		}
 		else
 		{
@@ -96,6 +103,43 @@ public class HTTPResponse {
 		return m_Response;
 	}
 
+
+	////
+	private void constructResponseCodeTrace() {
+
+		if (m_RequestType.equals("Other")) 
+		{
+			m_responseStatusCode = HTTPResponseCode.NOT_IMPLEMENTED;
+		}
+		else if (!checkResourceTrace(m_messageBody)) 
+		{
+			if (!m_responseStatusCode.equals(HTTPResponseCode.INTERNAL_SERVER_ERROR)) {				
+				m_responseStatusCode = HTTPResponseCode.NOT_FOUND;
+			}
+		}
+		else
+		{
+			m_responseStatusCode = HTTPResponseCode.OK;
+		}
+
+	}
+
+	private boolean checkResourceTrace(String i_messageBody) {
+
+		if(i_messageBody != null) 
+		{
+			m_ContentLength = (int) i_messageBody.length();
+			return true;
+
+		} 
+		else {
+			m_responseStatusCode = HTTPResponseCode.INTERNAL_SERVER_ERROR;
+			return false;
+		} 
+
+	}
+
+	/////
 
 
 	private void constructResponseCode() {
@@ -173,6 +217,8 @@ public class HTTPResponse {
 		case "txt"	: 
 			m_ContentType = v_ContentType + "text/plain";
 			break;
+		case "trace" : 
+			m_ContentType = v_ContentType + "message/http";
 		default		:
 			m_ContentType = v_ContentType + "application/octet-stream";
 			break;

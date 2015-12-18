@@ -29,18 +29,18 @@ public class HTTPRequest {
 	public HTTPRequest(String io_originalRequest, String io_httpMessageBody, int contentLength){
 		m_originalRequest = io_originalRequest;
 		m_httpMessageBody = io_httpMessageBody;
-		
+
 		// Parse the Raw Request and check it
 		if(!Parser.checkIfRequestIsParsable(io_originalRequest)){
 			m_requestHeaders = new HashMap<>();
 			m_errorCodeIfOccured = 4;
 			this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 		} else {
-			
+
 			String[] requestAsArray = Parser.SplitRequestToLinesIfAcceptable(m_originalRequest);
 			String[] requestLine = Parser.SplitRequestLineToHeadersIfAcceptable(requestAsArray[0]);
-			
-			
+
+
 			this.m_RequestedPage = requestLine[1];
 			this.m_HTTPver = requestLine[2];
 			this.m_RequestType = checkIfMethodAcceptable(requestLine[0]);//has to be last
@@ -55,7 +55,7 @@ public class HTTPRequest {
 			}
 		}
 	}
-	
+
 
 	private void handleRequestHeaders(String[] request){
 		this.m_requestHeaders = Parser.breakRequestStringToHeaders(request);
@@ -87,7 +87,11 @@ public class HTTPRequest {
 		if(extension == null){
 			handleFileExtensionErrors();
 		} else {
-			m_requestHeaders.put("extension", extension);
+			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
+				m_requestHeaders.put("extension", "trace");
+			} else {
+				m_requestHeaders.put("extension", extension);
+			}
 		}
 	}
 
@@ -130,11 +134,11 @@ public class HTTPRequest {
 	}
 
 	private void handleGetRequest(){
-		
+
 		// Seperate the parmas in the request if there are many
 		if(m_RequestedPage.indexOf("?") != -1){
 			String[] pageBrokenToQuery = Parser.parseGetRequest(m_RequestedPage);
-			
+
 			if(pageBrokenToQuery == null) {
 				m_errorCodeIfOccured = 4;
 				handleErroredRequest();
@@ -144,7 +148,7 @@ public class HTTPRequest {
 			}
 		}
 	}
-	
+
 	private void handlePostRequest(){
 		if(this.m_httpMessageBody != null){
 			if(this.m_httpMessageBody.length() > 0){
@@ -161,15 +165,15 @@ public class HTTPRequest {
 
 
 	private void handleHeadRequest(){
-		
+
 		handleGetRequest();//same as get only not providing the message body
 	}
-	
-	
-	
+
+
+
 	private void handleTraceRequest(){
-		
-		
+
+
 	}
 	private void handleErroredRequest(){}
 
