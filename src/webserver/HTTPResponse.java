@@ -24,6 +24,8 @@ public class HTTPResponse {
 	{
 		m_Response = "";
 		m_responseStatusCode = HTTPResponseCode.OK;//
+		m_ContentExtension = "";
+		m_ContentType = "";
 
 		if (i_HttpRequest.get("errors").equals(HTTPResponseCode.BAD_REQUEST)) 
 		{
@@ -122,7 +124,7 @@ public class HTTPResponse {
 		catch (Exception e) {
 			m_responseStatusCode = HTTPResponseCode.INTERNAL_SERVER_ERROR;
 			return false;
-		}
+		} 
 		return false;
 	}
 
