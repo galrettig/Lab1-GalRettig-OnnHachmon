@@ -18,7 +18,7 @@ public class HTTPRequest {
 	//Parameters – the parameters in the request (I used java.util.HashMap<String,String> to hold the parameters).
 	String m_HTTPver;
 	HashMap<String, String> m_HttpRequestParams = new HashMap<>();
-	HashMap<String, String> m_requestHeaders;
+	HashMap<String, String> m_requestHeaders = new HashMap<>();
 	String m_originalRequest;
 	//
 	//
@@ -32,7 +32,7 @@ public class HTTPRequest {
 
 		// Parse the Raw Request and check it
 		if(!Parser.checkIfRequestIsParsable(io_originalRequest)){
-			m_requestHeaders = new HashMap<>();
+			
 			m_errorCodeIfOccured = 4;
 			this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 		} else {
@@ -55,6 +55,9 @@ public class HTTPRequest {
 			}
 		}
 	}
+	
+	
+	
 
 
 	private void handleRequestHeaders(String[] request){

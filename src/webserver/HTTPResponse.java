@@ -3,7 +3,6 @@ import java.io.File;
 import java.util.HashMap;
 
 public class HTTPResponse {
-
 	String m_HttpVersion; // client error
 	String m_ContentExtension;
 	String m_RequestedPage; // TODO: check if valid exist
@@ -21,6 +20,11 @@ public class HTTPResponse {
 	String m_PathTofile;
 	boolean m_fileIsExpected = true;
 	String m_messageBody;
+	
+	
+	final String SERVERS_DEFAULT_HTTP_VERSION = "HTTP/1.1";
+	final String _CRLF = "\r\n";
+	final String _SP = " ";
 
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
@@ -30,10 +34,14 @@ public class HTTPResponse {
 		m_ContentExtension = "";
 		m_ContentType = "";
 
-		if (i_HttpRequest.get("errors").equals(HTTPResponseCode.BAD_REQUEST)) 
+		if (i_HttpRequest.get("errors").equals(HTTPResponseCode.BAD_REQUEST.displayName())) 
 		{
 			m_ErrorsFoundInRequest = HTTPResponseCode.BAD_REQUEST;
 			m_responseStatusCode = HTTPResponseCode.BAD_REQUEST;
+		}
+		else if(i_HttpRequest.get("errors").equals(HTTPResponseCode.NOT_IMPLEMENTED.displayName())){
+			m_ErrorsFoundInRequest = HTTPResponseCode.NOT_IMPLEMENTED;
+			m_responseStatusCode = HTTPResponseCode.NOT_IMPLEMENTED;
 		}
 
 		else 
@@ -75,13 +83,18 @@ public class HTTPResponse {
 	private String constructResponse() 
 	{
 		// Construct the first status line
-		m_Response += m_HttpVersion + " ";
-
-		if (m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST)) 
+		boolean buildErroredResponse = m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST) || 
+				m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED);
+		if (buildErroredResponse) 
+		{
+			m_Response += SERVERS_DEFAULT_HTTP_VERSION + _SP + m_responseStatusCode.displayName() + _CRLF;
+			return m_Response;
+		}
+		/*else if () 
 		{
 			m_Response += m_responseStatusCode.displayName() + "\r\n";
 			return m_Response;
-		}
+		}*/
 		else if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
 			constructResponseCodeTrace();
 			m_Response += (m_responseStatusCode.displayName() + 
@@ -112,7 +125,7 @@ public class HTTPResponse {
 		}
 		else if (!checkResourceTrace(m_messageBody)) 
 		{
-			if (!m_responseStatusCode.equals(HTTPResponseCode.INTERNAL_SERVER_ERROR)) {				
+			if (!m_responseStatusCode.displayName().equals(HTTPResponseCode.INTERNAL_SERVER_ERROR.displayName())) {				
 				m_responseStatusCode = HTTPResponseCode.NOT_FOUND;
 			}
 		}
@@ -229,7 +242,7 @@ public class HTTPResponse {
 	public String getPathToFile() {
 
 		//TODO: Add here what to return in case of bad request
-		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || !this.m_fileIsExpected){
+		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.m_fileIsExpected){
 			return null;
 		}
 		//TODO: change the condition because it's not coming parsed like this.
@@ -242,6 +255,8 @@ public class HTTPResponse {
 	public boolean fileIsExpected(){
 		return m_fileIsExpected;
 	}
+	
+	
 
 	/*
 	public String constructContentTypeResponse()
