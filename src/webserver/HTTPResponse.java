@@ -85,6 +85,7 @@ public class HTTPResponse {
 		// Construct the first status line
 		boolean buildErroredResponse = m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST) || 
 				m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED);
+		
 		if (buildErroredResponse) 
 		{
 			m_Response += SERVERS_DEFAULT_HTTP_VERSION + _SP + m_responseStatusCode.displayName() + _CRLF;
@@ -104,9 +105,12 @@ public class HTTPResponse {
 		else
 		{
 			constructResponseCode();
-			m_Response += (m_responseStatusCode.displayName() + 
-					"\r\n" + m_ContentType + "\r\n" + 
-					v_ContentLength + m_ContentLength +"\r\n\r\n");
+			m_Response += m_responseStatusCode.displayName() + _CRLF;
+					
+			if(!m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
+				m_Response += m_ContentType + _CRLF + 
+						v_ContentLength + m_ContentLength + _CRLF + _CRLF;
+			}
 
 		}
 
