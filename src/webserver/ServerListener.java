@@ -115,21 +115,28 @@ public class ServerListener implements Runnable {
 			if (connection.getOutputStream() != null ) {
 				writer = new DataOutputStream(connection.getOutputStream());
 				System.out.println(response);
-
-
-				writer.writeBytes(response);
-				writer.flush();
+				
+				if(!connection.isClosed()){
+					
+				
+					writer.writeBytes(response);
+					writer.flush();
+				}
 
 				if(res.getPathToFile() != null && res.fileIsExpected()){
 					byte[] fileToSend = readFile(new File(res.getPathToFile()));
 
-					writer.write(fileToSend, 0, fileToSend.length);
-					writer.flush();
+					if(!connection.isClosed()){
+						writer.write(fileToSend, 0, fileToSend.length);
+						writer.flush();
+					}
 
 				}
 
-				writer.writeBytes("\r\n");
-				writer.flush();
+				if(!connection.isClosed()){
+					writer.writeBytes("\r\n");
+					writer.flush();
+				}
 				writer.close();
 			}
 
