@@ -164,4 +164,39 @@ public class HandleRequest implements Runnable {
 		}
 		return null;
 	}
+	
+	private void writeChunkData(File file, DataOutputStream writer){
+
+		try
+		{
+			FileInputStream fis = new FileInputStream(file);
+			byte[] bFile = new byte[1024];
+			int chunkSize = 0;
+			// read until the end of the stream.
+			while((chunkSize = fis.read(bFile)) != -1)
+			{
+				writer.write(chunkSize);
+				writer.writeBytes("\r\n");
+				writer.flush();
+				writer.write(bFile, 0, chunkSize);
+				writer.writeBytes("\r\n");
+				writer.flush();
+			}
+			
+			fis.close();
+			
+		}
+		catch(FileNotFoundException e)
+		{
+			// do something
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+}
+
+
+
+
 }
