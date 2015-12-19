@@ -11,6 +11,10 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Properties;
 
+// TODO: Print Request Headers
+// TODO: Chunck File functional
+// TODO: 
+
 public class WebServer {
 	
 	public static void main(String[] args) throws IOException
