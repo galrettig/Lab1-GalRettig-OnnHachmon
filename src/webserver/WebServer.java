@@ -13,7 +13,7 @@ import java.util.Properties;
 
 // TODO: Print Request Headers
 // TODO: Chunck File functional
-// TODO: 
+// TODO: Handle Errors In Code
 
 public class WebServer {
 	
