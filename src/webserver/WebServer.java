@@ -32,19 +32,19 @@ public class WebServer {
 		//addThreadsToPool();
 		
 		
-		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
+		//**SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
 		
 //		for (int i = 0; i < 8; i++) {
 //			threadPool.push(new ServerListener());			
 //		}
 		
 		// Create Threads to execute
-		Runnable webserver = new ServerListener();
-		new Thread(webserver).start();
+		/*Runnable webserver = new ServerListener();
+		new Thread(webserver).start();*/
 		
 		// create listener
-		//webSrv = new ServerListener();
-		//webSrv.runListener();
+		webSrv = new ServerListener();
+		webSrv.runListener();
 		
 		// create http request
 		

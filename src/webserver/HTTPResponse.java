@@ -42,6 +42,7 @@ public class HTTPResponse {
 			m_RequestType = i_HttpRequest.get("RequestType");
 			// TODO: transfer the extension from the parse
 			m_ContentExtension = i_HttpRequest.get("extension");
+			m_ContentType = constructExtensionToContentType();
 
 			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
 				if(i_HttpRequest.containsKey("originalRequest")){
@@ -50,8 +51,6 @@ public class HTTPResponse {
 				}
 			}
 			else {
-				m_ContentType = constructExtensionToContentType();
-
 				m_RequestedPage = i_HttpRequest.get("URI");
 
 
@@ -219,6 +218,7 @@ public class HTTPResponse {
 			break;
 		case "trace" : 
 			m_ContentType = v_ContentType + "message/http";
+			break;
 		default		:
 			m_ContentType = v_ContentType + "application/octet-stream";
 			break;
