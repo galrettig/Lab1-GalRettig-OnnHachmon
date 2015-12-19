@@ -75,7 +75,7 @@ public class HTMLTemplater {
 		return null;
 	}
 	
-	public static String templateHTML(File file, HashMap<String,String> params){
+	public static byte[] templateHTML(File file, HashMap<String,String> params){
 		try {
 			FileReader fileReader = new FileReader(file);
 			BufferedReader reader = new BufferedReader(fileReader);
@@ -86,7 +86,7 @@ public class HTMLTemplater {
 			}
 			reader.close();
 			String templatedFile = constructString(htmlString, params);
-			return templatedFile;
+			return templatedFile.getBytes();
 			
 			
 			

@@ -29,6 +29,7 @@ public class HTTPResponse {
 	final String SERVERS_DEFAULT_HTTP_VERSION = "HTTP/1.1";
 	final String _CRLF = "\r\n";
 	final String _SP = " ";
+	byte[] templatedHTML;
 
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest, HashMap<String,String> request_params) 
@@ -210,7 +211,13 @@ public class HTTPResponse {
 			{
 				// TODO: check if int or long
 				if(!isChunked){
-					m_ContentLength = (int) file.length();
+					if(file.getName().equals("params_info.html")){
+						templatedHTML = HTMLTemplater.templateHTML(file,m_HttpRequestParams);
+						m_ContentLength = (int) templatedHTML.length;
+					}
+					else {
+						m_ContentLength = (int) file.length();
+					}
 				}
 				
 				m_PathTofile = pathname;
