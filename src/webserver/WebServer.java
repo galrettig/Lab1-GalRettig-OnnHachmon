@@ -26,7 +26,7 @@ public class WebServer {
 		ConfigurationObject.getConfigurationObject().setup(m_confList);
 		
 		if(ConfigurationObject.getPortNumber() == null){
-			throw new IOException("cannot resolve config file");
+			throw new IOException("Problem in Reading The Config File");
 		}
 		
 		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
@@ -52,12 +52,11 @@ public class WebServer {
 						new BufferedReader(new InputStreamReader(in))) {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
-				//System.out.println(line);
 				fileData.append("\n");
 				fileData.append(line);
 			}
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Could not Read The Config File duo to bad Path or IOERROR");
 		}
 	}
 
@@ -83,7 +82,7 @@ public class WebServer {
 			confList.put("defaultPage", prop.getProperty("defaultPage"));
 			
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			System.err.println("Could not Read The Config File duo to bad Path or IOERROR");
 		} finally {
 			if (input != null) {
 				try {
