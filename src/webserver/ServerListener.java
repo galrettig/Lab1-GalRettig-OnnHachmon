@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -122,17 +121,12 @@ public class ServerListener implements Runnable {
 				writer.flush();
 
 				if(res.getPathToFile() != null && res.fileIsExpected()){
-					if(!res.isChunked){
-						byte[] fileToSend = readFile(new File(res.getPathToFile()));
+					byte[] fileToSend = readFile(new File(res.getPathToFile()));
 
-						writer.write(fileToSend, 0, fileToSend.length);
-						writer.flush();
-					}
-					else {
-						writeChunkData((new File(res.getPathToFile())), writer);
-					}
+					writer.write(fileToSend, 0, fileToSend.length);
+					writer.flush();
+
 				}
-				
 
 				writer.writeBytes("\r\n");
 				writer.flush();
@@ -147,40 +141,6 @@ public class ServerListener implements Runnable {
 		} 
 	}
 
-	private void writeChunkData(File file, DataOutputStream writer){
-
-			try
-			{
-				FileInputStream fis = new FileInputStream(file);
-				byte[] bFile = new byte[1024];
-				int chunkSize = 0;
-				// read until the end of the stream.
-				while((chunkSize = fis.read(bFile)) != -1)
-				{
-					
-					writer.write(chunkSize);
-					writer.writeBytes("\r\n");
-					writer.flush();
-					writer.write(bFile, 0, chunkSize);
-					writer.writeBytes("\r\n");
-					writer.flush();
-				}
-				fis.close();
-				
-			}
-			catch(FileNotFoundException e)
-			{
-				// do something
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-	}
-	
-	
-	
-	
 	// TODO: check if it's right to create http response here
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
 

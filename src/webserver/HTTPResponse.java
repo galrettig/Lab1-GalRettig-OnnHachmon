@@ -107,14 +107,14 @@ public class HTTPResponse {
 		}*/
 		else if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
 			constructResponseCodeTrace();
-			m_Response += (m_responseStatusCode.displayName() + 
+			m_Response += (SERVERS_DEFAULT_HTTP_VERSION + m_responseStatusCode.displayName() + 
 					"\r\n" + m_ContentType + "\r\n" + 
 					v_ContentLength + m_ContentLength +"\r\n\r\n" + m_messageBody);
 		}
 		else
 		{
 			constructResponseCode();
-			m_Response += m_responseStatusCode.displayName() + _CRLF;
+			m_Response += (SERVERS_DEFAULT_HTTP_VERSION + m_responseStatusCode.displayName() + _CRLF);
 					
 			if(isChunked){
 				m_Response += m_ContentType + _CRLF + 
