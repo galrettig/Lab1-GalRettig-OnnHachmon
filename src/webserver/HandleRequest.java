@@ -77,7 +77,8 @@ public class HandleRequest implements Runnable {
 				//System.out.println("message body = " + messageBodyStr.toString());
 				//fullRequest += messageBodyStr.toString();
 			}
-			//System.out.println(fullRequest);//full request obtained
+			
+			System.out.println(fullRequest);//full request obtained
 			HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
 
 			if (connection.isConnected()) {
@@ -87,7 +88,6 @@ public class HandleRequest implements Runnable {
 
 			e.printStackTrace();
 		} 
-		System.out.println("Numbers Of Threads : " + Thread.activeCount());
 	}
 
 	public void handleResponse(HTTPResponse res, Socket connection){
@@ -105,7 +105,6 @@ public class HandleRequest implements Runnable {
 					writer.flush();
 				}
 				
-				
 				// Send The File and Close Response As Http protocol request
 				if(res.getPathToFile() != null && res.fileIsExpected()){
 					if(!res.isChunked){
@@ -120,11 +119,6 @@ public class HandleRequest implements Runnable {
 					}
 					
 				}
-
-//				if(!connection.isClosed()){
-//					writer.writeBytes("\r\n");
-//					writer.flush();
-//				}
 				writer.close();
 			}
 

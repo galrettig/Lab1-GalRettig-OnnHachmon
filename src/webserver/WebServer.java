@@ -14,6 +14,8 @@ import java.util.Properties;
 // TODO: Print Request Headers
 // TODO: Chunck File functional
 // TODO: Handle Errors In Code
+// TODO: see what happans with too many threads
+
 
 public class WebServer {
 	
