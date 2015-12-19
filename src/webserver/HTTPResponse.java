@@ -31,12 +31,15 @@ public class HTTPResponse {
 	final String _SP = " ";
 
 
-	public HTTPResponse(HashMap<String, String> i_HttpRequest) 
+	public HTTPResponse(HashMap<String, String> i_HttpRequest, HashMap<String,String> request_params) 
 	{
 		m_Response = "";
 		m_responseStatusCode = HTTPResponseCode.OK;//
 		m_ContentExtension = "";
 		m_ContentType = "";
+		if(request_params != null){
+			this.m_HttpRequestParams = request_params;
+		}
 
 		if (i_HttpRequest.get("errors").equals(HTTPResponseCode.BAD_REQUEST.displayName())) 
 		{

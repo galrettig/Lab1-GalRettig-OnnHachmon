@@ -141,7 +141,7 @@ public class HandleRequest implements Runnable {
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
 
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
-		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
+		HTTPResponse res = new HTTPResponse(req.m_requestHeaders, req.m_HttpRequestParams);
 		
 		return res;
 	}

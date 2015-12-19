@@ -66,7 +66,7 @@ public class HTMLTemplater {
 	}
 	
 	private static String getParamNameFromLine(String variableLine){
-		int indexOfUnderScore = variableLine.indexOf("_");
+		int indexOfUnderScore = variableLine.indexOf('_') + 1;
 		if(indexOfUnderScore > -1){
 			String paramName = variableLine.substring(indexOfUnderScore);
 			return paramName;
