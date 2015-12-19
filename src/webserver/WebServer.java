@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.channels.NetworkChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,12 +28,33 @@ public class WebServer {
 		if(ConfigurationObject.getPortNumber() == null){
 			throw new IOException("cannot resolve config file");
 		}
+		
+		//addThreadsToPool();
+		
+		
+		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
+		
+//		for (int i = 0; i < 8; i++) {
+//			threadPool.push(new ServerListener());			
+//		}
+		
+		// Create Threads to execute
+		Runnable webserver = new ServerListener();
+		new Thread(webserver).start();
+		
 		// create listener
-		webSrv = new ServerListener();
-		webSrv.runListener();
+		//webSrv = new ServerListener();
+		//webSrv.runListener();
 		
 		// create http request
 		
+		
+	}
+
+	private static void addThreadsToPool() {
+		// TODO Auto-generated method stub
+		
+		ServerThreadPool threadPool = new ServerThreadPool();
 		
 	}
 
