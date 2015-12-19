@@ -126,7 +126,7 @@ public class HandleRequest implements Runnable {
 //					writer.flush();
 //				}
 				writer.close();
-			} 
+			}
 
 			// TODO: Add here the option how to send the file Regular or Chuncked
 			
@@ -193,8 +193,11 @@ public class HandleRequest implements Runnable {
 			writer.writeBytes(Integer.toHexString(0));
 			writer.writeBytes("\r\n");
 			writer.flush();
+			writer.writeBytes("\r\n");
+			writer.flush();
 			
 		}
+		
 		catch(FileNotFoundException e)
 		{
 			// do something

@@ -83,7 +83,6 @@ public class HTTPRequest {
 		} else {
 		
 			handleFileExtension();
-			//m_requestHeaders.put("chunked","yes");
 		}
 
 
