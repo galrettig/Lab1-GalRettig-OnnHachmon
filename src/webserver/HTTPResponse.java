@@ -17,6 +17,7 @@ public class HTTPResponse {
 	String m_Response;
 	String v_ContentType = "Content-Type: ";
 	String v_ContentLength = "Content-Length: ";
+	String v_TransferEncodingChunked = "Transfer-Encoding: chunked";
 	String m_PathTofile;
 	String m_messageBody;
 	
@@ -115,7 +116,11 @@ public class HTTPResponse {
 			constructResponseCode();
 			m_Response += m_responseStatusCode.displayName() + _CRLF;
 					
-			if(!m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
+			if(isChunked){
+				m_Response += m_ContentType + _CRLF + 
+						v_TransferEncodingChunked + _CRLF + _CRLF;
+			}
+			else if(!m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
 				m_Response += m_ContentType + _CRLF + 
 						v_ContentLength + m_ContentLength + _CRLF + _CRLF;
 			}
@@ -201,7 +206,10 @@ public class HTTPResponse {
 			if (file.exists())
 			{
 				// TODO: check if int or long
-				m_ContentLength = (int) file.length();
+				if(!isChunked){
+					m_ContentLength = (int) file.length();
+				}
+				
 				m_PathTofile = pathname;
 				return true;
 			}
