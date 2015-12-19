@@ -14,23 +14,17 @@ import java.util.Properties;
 
 public class WebServer {
 	
-
-	
 	public static void main(String[] args) throws IOException
 	{
-		ServerListener webSrv;
 		HashMap<String, String> m_confList = new HashMap<>();
 		m_confList = readConfFile();
+		
 		// create configuration object
-		//m_appConfigObject = new ConfigurationObject(readConfFile());
 		ConfigurationObject.getConfigurationObject().setup(m_confList);
 		
 		if(ConfigurationObject.getPortNumber() == null){
 			throw new IOException("cannot resolve config file");
 		}
-		
-		//addThreadsToPool();
-		
 		
 		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
 				
@@ -38,6 +32,7 @@ public class WebServer {
 		webserver.start();
 		
 //		// create listener
+		//ServerListener webSrv;
 //		webSrv = new ServerListener();
 //		webSrv.runListener();
 		
