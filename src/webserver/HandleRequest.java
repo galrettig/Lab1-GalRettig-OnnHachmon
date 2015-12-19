@@ -1,5 +1,6 @@
 package webserver;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,7 +78,7 @@ public class HandleRequest implements Runnable {
 				//System.out.println("message body = " + messageBodyStr.toString());
 				//fullRequest += messageBodyStr.toString();
 			}
-			
+
 			System.out.println(fullRequest);//full request obtained
 			HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
 
@@ -94,7 +95,7 @@ public class HandleRequest implements Runnable {
 
 		String response = res.GenerateResponse();
 		DataOutputStream writer;
-		
+
 		try {
 			if (connection.getOutputStream() != null ) {
 				writer = new DataOutputStream(connection.getOutputStream());
@@ -104,36 +105,42 @@ public class HandleRequest implements Runnable {
 					writer.writeBytes(response);
 					writer.flush();
 				}
-				
+
 				// Send The File and Close Response As Http protocol request
 				if(res.getPathToFile() != null && res.fileIsExpected()){
+					File file= new File(res.getPathToFile());
+					
+					//serving without chunked transfer
 					if(!res.isChunked){
 						byte[] fileToSend;
-						File file= new File(res.getPathToFile());
+						
+						
 						if(file.getName().equals("params_info.html")){
 							fileToSend = res.templatedHTML;
-							
-							
-						}
-						else{
+						} else {
 							fileToSend = readFile(file);
-
 						}
+						
 						if(!connection.isClosed()){
 							writer.write(fileToSend, 0, fileToSend.length);
 							writer.flush();
 						}
-						
+
+						//serving as chunks
 					} else {
-						writeChunkData(new File(res.getPathToFile()),writer);
+						if(file.getName().equals("params_info.html")){
+							writeChunkString(res.templatedHTML, writer);
+						} else {
+							writeChunkData(new File(res.getPathToFile()),writer);
+						}
 					}
-					
+
 				}
 				writer.close();
 			}
 
 			// TODO: Add here the option how to send the file Regular or Chuncked
-			
+
 		} catch (IOException e) {
 			System.err.println("Network Problem: Socket was Closed");
 		} 
@@ -144,7 +151,7 @@ public class HandleRequest implements Runnable {
 
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders, req.m_HttpRequestParams);
-		
+
 		return res;
 	}
 
@@ -174,7 +181,7 @@ public class HandleRequest implements Runnable {
 		}
 		return null;
 	}
-	
+
 	private void writeChunkData(File file, DataOutputStream writer){
 
 		try
@@ -192,16 +199,16 @@ public class HandleRequest implements Runnable {
 				writer.writeBytes("\r\n");
 				writer.flush();
 			}
-			
+
 			fis.close();
 			writer.writeBytes(Integer.toHexString(0));
 			writer.writeBytes("\r\n");
 			writer.flush();
 			writer.writeBytes("\r\n");
 			writer.flush();
-			
+
 		}
-		
+
 		catch(FileNotFoundException e)
 		{
 			// do something
@@ -209,8 +216,46 @@ public class HandleRequest implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
 	
-}
+	
+	private void writeChunkString(byte[] string, DataOutputStream writer){
+
+		try
+		{
+			ByteArrayInputStream fis = new ByteArrayInputStream(string);
+			byte[] bFile = new byte[1024];
+			int chunkSize = 0;
+			// read until the end of the stream.
+			while((chunkSize = fis.read(bFile)) != -1)
+			{
+				writer.writeBytes(Integer.toHexString(chunkSize));
+				writer.writeBytes("\r\n");
+				writer.flush();
+				writer.write(bFile, 0, chunkSize);
+				writer.writeBytes("\r\n");
+				writer.flush();
+			}
+
+			fis.close();
+			writer.writeBytes(Integer.toHexString(0));
+			writer.writeBytes("\r\n");
+			writer.flush();
+			writer.writeBytes("\r\n");
+			writer.flush();
+
+		}
+
+		catch(FileNotFoundException e)
+		{
+			// do something
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 
 
