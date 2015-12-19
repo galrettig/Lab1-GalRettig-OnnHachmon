@@ -83,6 +83,7 @@ public class HandleRequest implements Runnable {
 
 			e.printStackTrace();
 		} 
+		System.out.println("Numbers Of Threads : " + Thread.activeCount());
 	}
 
 	public void handleResponse(HTTPResponse res, Socket connection){

@@ -22,11 +22,8 @@ public class ServerEscuchare {
 		System.out.println("start listeneing on port: " + port);
 		
 		while (true) {
-			
 			Socket connection = serverSocket.accept();
-			
 			HandleRequest handleRequest = new HandleRequest(connection);
-			//add 
 			this.m_threadPool.push(handleRequest);
 		}
 		
