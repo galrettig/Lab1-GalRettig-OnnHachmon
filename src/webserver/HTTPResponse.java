@@ -3,23 +3,26 @@ import java.io.File;
 import java.util.HashMap;
 
 public class HTTPResponse {
+	HashMap<String, String> m_HttpRequestParams;
 	String m_HttpVersion; // client error
 	String m_ContentExtension;
 	String m_RequestedPage; // TODO: check if valid exist
 	String m_RequestType;
 	HTTPResponseCode m_ErrorsFoundInRequest;
-
-	HashMap<String, String> m_HttpRequestParams;
-
-	String m_Response;
 	HTTPResponseCode m_responseStatusCode;
+	
+
 	int m_ContentLength; 
 	String m_ContentType;
+	String m_Response;
 	String v_ContentType = "Content-Type: ";
 	String v_ContentLength = "Content-Length: ";
 	String m_PathTofile;
-	boolean m_fileIsExpected = true;
 	String m_messageBody;
+	
+	boolean m_fileIsExpected = true;
+	boolean isChunked = false;
+	
 	
 	
 	final String SERVERS_DEFAULT_HTTP_VERSION = "HTTP/1.1";
@@ -50,7 +53,12 @@ public class HTTPResponse {
 			m_RequestType = i_HttpRequest.get("RequestType");
 			// TODO: transfer the extension from the parse
 			m_ContentExtension = i_HttpRequest.get("extension");
+			
 			m_ContentType = constructExtensionToContentType();
+			
+			if(i_HttpRequest.containsKey("chunked")){
+				isChunked = i_HttpRequest.get("chunked").equals("yes");
+			}
 
 			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
 				if(i_HttpRequest.containsKey("originalRequest")){
@@ -205,6 +213,7 @@ public class HTTPResponse {
 		return false;
 	}
 
+	
 	private String constructExtensionToContentType()
 	{
 		switch (m_ContentExtension) {
