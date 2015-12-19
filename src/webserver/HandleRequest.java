@@ -191,7 +191,7 @@ public class HandleRequest implements Runnable {
 			
 			fis.close();
 			writer.writeBytes(Integer.toHexString(0));
-			writer.writeBytes("\r\n\r\n");
+			writer.writeBytes("\r\n");
 			writer.flush();
 			
 		}
