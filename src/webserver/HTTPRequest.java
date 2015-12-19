@@ -45,7 +45,7 @@ public class HTTPRequest {
 			this.m_HTTPver = requestLine[2];
 			this.m_RequestType = checkIfMethodAcceptable(requestLine[0]);//has to be last
 
-			if(!HttpRequestType.OTHER.equals(this.m_RequestType)){
+			if(!HttpRequestType.OTHER.displayName().equals(this.m_RequestType.displayName())){
 				//can fully parse headers
 				this.handleRequestHeaders(requestAsArray);
 
@@ -70,14 +70,17 @@ public class HTTPRequest {
 		m_requestHeaders.put("URI", this.m_RequestedPage);
 		m_requestHeaders.put("HTTPVersion", this.m_HTTPver);
 		m_requestHeaders.put("RequestType", m_RequestType.displayName());
-		if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
-			m_requestHeaders.put("originalRequest", m_originalRequest);
-		}
+		
 
 
 		m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
-		handleFileExtension();
-
+		if(m_RequestType.displayName().equals(HttpRequestType.TRACE.displayName())){
+			m_requestHeaders.put("originalRequest", m_originalRequest);
+			m_requestHeaders.put("extension", "trace");
+		} else {
+		
+			handleFileExtension();
+		}
 
 
 	}
@@ -87,7 +90,7 @@ public class HTTPRequest {
 		if(extension == null){
 			handleFileExtensionErrors();
 		} else {
-			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
+			if(m_RequestType.displayName().equals(HttpRequestType.TRACE.displayName())){
 				m_requestHeaders.put("extension", "trace");
 			} else {
 				m_requestHeaders.put("extension", extension);
@@ -189,10 +192,10 @@ public class HTTPRequest {
 	}
 
 	public boolean ImplementedMethod(){
-		if(m_RequestType.equals(HttpRequestType.GET) ||
-				m_RequestType.equals(HttpRequestType.POST) || 
-				m_RequestType.equals(HttpRequestType.HTTP_HEAD) ||
-				m_RequestType.equals(HttpRequestType.TRACE)){
+		if(m_RequestType.displayName().equals(HttpRequestType.GET.displayName()) ||
+				m_RequestType.displayName().equals(HttpRequestType.POST.displayName()) || 
+				m_RequestType.displayName().equals(HttpRequestType.HTTP_HEAD.displayName()) ||
+				m_RequestType.displayName().equals(HttpRequestType.TRACE.displayName())){
 			return true;
 		}
 		return false;

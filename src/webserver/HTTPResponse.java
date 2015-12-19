@@ -229,7 +229,7 @@ public class HTTPResponse {
 	public String getPathToFile() {
 
 		//TODO: Add here what to return in case of bad request
-		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)){
+		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || !this.m_fileIsExpected){
 			return null;
 		}
 		//TODO: change the condition because it's not coming parsed like this.
