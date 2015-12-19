@@ -32,32 +32,18 @@ public class WebServer {
 		//addThreadsToPool();
 		
 		
-		//**SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
+		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
+				
+		ServerEscuchare webserver = new ServerEscuchare(threadPool);
+		webserver.start();
 		
-//		for (int i = 0; i < 8; i++) {
-//			threadPool.push(new ServerListener());			
-//		}
-		
-		// Create Threads to execute
-		/*Runnable webserver = new ServerListener();
-		new Thread(webserver).start();*/
-		
-		// create listener
-		webSrv = new ServerListener();
-		webSrv.runListener();
-		
-		// create http request
-		
+//		// create listener
+//		webSrv = new ServerListener();
+//		webSrv.runListener();
 		
 	}
 
-	private static void addThreadsToPool() {
-		// TODO Auto-generated method stub
-		
-		ServerThreadPool threadPool = new ServerThreadPool();
-		
-	}
-
+	//TODO: check how many read file we have and maybe do utils class
 	//TODO: delete ?????? 
 	public static void readFile()
 	{
