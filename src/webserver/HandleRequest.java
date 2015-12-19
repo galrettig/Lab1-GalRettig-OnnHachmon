@@ -105,20 +105,26 @@ public class HandleRequest implements Runnable {
 					writer.flush();
 				}
 				
+				
 				// Send The File and Close Response As Http protocol request
 				if(res.getPathToFile() != null && res.fileIsExpected()){
-					byte[] fileToSend = readFile(new File(res.getPathToFile()));
+					if(!res.isChunked){
+						byte[] fileToSend = readFile(new File(res.getPathToFile()));
 
-					if(!connection.isClosed()){
-						writer.write(fileToSend, 0, fileToSend.length);
-						writer.flush();
+						if(!connection.isClosed()){
+							writer.write(fileToSend, 0, fileToSend.length);
+							writer.flush();
+						}
+					} else {
+						writeChunkData(new File(res.getPathToFile()),writer);
 					}
+					
 				}
 
-				if(!connection.isClosed()){
-					writer.writeBytes("\r\n");
-					writer.flush();
-				}
+//				if(!connection.isClosed()){
+//					writer.writeBytes("\r\n");
+//					writer.flush();
+//				}
 				writer.close();
 			} 
 
@@ -175,7 +181,7 @@ public class HandleRequest implements Runnable {
 			// read until the end of the stream.
 			while((chunkSize = fis.read(bFile)) != -1)
 			{
-				writer.write(chunkSize);
+				writer.writeBytes(Integer.toHexString(chunkSize));
 				writer.writeBytes("\r\n");
 				writer.flush();
 				writer.write(bFile, 0, chunkSize);
@@ -184,6 +190,9 @@ public class HandleRequest implements Runnable {
 			}
 			
 			fis.close();
+			writer.writeBytes(Integer.toHexString(0));
+			writer.writeBytes("\r\n\r\n");
+			writer.flush();
 			
 		}
 		catch(FileNotFoundException e)
