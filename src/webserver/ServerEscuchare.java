@@ -26,8 +26,5 @@ public class ServerEscuchare {
 			HandleRequest handleRequest = new HandleRequest(connection);
 			this.m_threadPool.push(handleRequest);
 		}
-		
-		
 	}
-		
 }

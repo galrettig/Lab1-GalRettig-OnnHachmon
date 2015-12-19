@@ -31,6 +31,7 @@ public class HandleRequest implements Runnable {
 		messageBodyString = null;
 		contentLength = -1;
 		messageBodyBuilder = null;
+		response = null;
 
 	}
 
@@ -39,8 +40,11 @@ public class HandleRequest implements Runnable {
 
 		try {
 			//TODO: handle the connection
+			if (connection.isClosed()) {
+				return;
+			} 
 			inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			line = inputClient.readLine();
+			line = inputClient.readLine();				
 
 			// Read Request According to Http Protocol
 			while(line != null && !line.equals(""))
@@ -90,18 +94,18 @@ public class HandleRequest implements Runnable {
 
 		String response = res.GenerateResponse();
 		DataOutputStream writer;
+		
 		try {
 			if (connection.getOutputStream() != null ) {
 				writer = new DataOutputStream(connection.getOutputStream());
 				System.out.println(response);
 
 				if(!connection.isClosed()){
-
-
 					writer.writeBytes(response);
 					writer.flush();
 				}
-
+				
+				// Send The File and Close Response As Http protocol request
 				if(res.getPathToFile() != null && res.fileIsExpected()){
 					byte[] fileToSend = readFile(new File(res.getPathToFile()));
 
@@ -109,7 +113,6 @@ public class HandleRequest implements Runnable {
 						writer.write(fileToSend, 0, fileToSend.length);
 						writer.flush();
 					}
-
 				}
 
 				if(!connection.isClosed()){
@@ -117,26 +120,21 @@ public class HandleRequest implements Runnable {
 					writer.flush();
 				}
 				writer.close();
-			}
+			} 
 
 			// TODO: Add here the option how to send the file Regular or Chuncked
-			// Send The File and Close Response As Http protocol request
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Network Problem: Socket was Closed");
 		} 
 	}
 
 	// TODO: check if it's right to create http response here
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
 
-		// TODO: Del
-		/*HTTPRequest req = Parser.parseHttp(i_fullRequest, msgBody);
-		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
-		return res;*/
-
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders);
+		
 		return res;
 	}
 
@@ -166,7 +164,4 @@ public class HandleRequest implements Runnable {
 		}
 		return null;
 	}
-
-
-
 }
