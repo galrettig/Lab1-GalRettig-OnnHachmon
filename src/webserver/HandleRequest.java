@@ -108,12 +108,20 @@ public class HandleRequest implements Runnable {
 				// Send The File and Close Response As Http protocol request
 				if(res.getPathToFile() != null && res.fileIsExpected()){
 					if(!res.isChunked){
-						byte[] fileToSend = readFile(new File(res.getPathToFile()));
+						File file= new File(res.getPathToFile());
+						if(file.getName().equals("params_info.html")){
+							String templatedHTML = HTMLTemplater.templateHTML(file, res.m_HttpRequestParams);
+							writer.writeBytes(templatedHTML);
+							writer.flush();
+						}
+						else{
+							byte[] fileToSend = readFile(file);
 
 						if(!connection.isClosed()){
 							writer.write(fileToSend, 0, fileToSend.length);
 							writer.flush();
-						}
+						}}
+						
 					} else {
 						writeChunkData(new File(res.getPathToFile()),writer);
 					}
