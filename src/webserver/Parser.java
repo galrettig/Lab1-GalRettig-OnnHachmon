@@ -32,7 +32,6 @@ public class Parser {
 		} else {
 			extension = "html";
 		}
-		
 		return extension;
 	}
 
@@ -49,11 +48,7 @@ public class Parser {
 			}
 		}
 		return parsable;
-		
 	}
-	
-	
-	
 	
 	// check if the the request-line is acceptable , returns the the headers of the request-line splitted to spaces into array
 	// or null if it cannot
@@ -79,10 +74,6 @@ public class Parser {
 		}
 		return requestSplitted;
 	}
-	
-	
-	
-	
 	
 	// check if the request method is accpeptable by the server, if not returns -1
 	static HttpRequestType checkIfMethodAcceptable(String requestMethod){
@@ -133,21 +124,16 @@ public class Parser {
 		}
 		else {
 			params = handleEncodedParams(messageBody);
-		}
-		
-		
+		}	
 	}
-	
 	
 	static String[] parseGetRequest(String i_URI) {
 		int indexOfSeperator = i_URI.indexOf("?");
 		if(indexOfSeperator > -1){
 			String[] URIandParams = i_URI.split("\\?");
 			if(URIandParams.length == 2){
-
 				return URIandParams;
-			}
-				
+			}		
 		}
 		return null;
 	}
@@ -181,22 +167,14 @@ public class Parser {
 		return params;
 	}
 	
-	
-	
-
 	private static void parseTraceRequest(HashMap<String, String> i_httpRequest) {
-
 		System.out.println(i_httpRequest);
-
 	}
-
-	
 
 	private static void parseHttpHeadRequest(HashMap<String, String> i_httpRequest) {
 		// TODO Auto-generated method stub
 		System.out.println(i_httpRequest);
 	}
-
 
 	private static String getCorrectPagePath(String url){
 		if(url.length() == 1 && url.indexOf("/") == 0){
@@ -204,11 +182,6 @@ public class Parser {
 		}
 		return url;
 	}
-
-	
-
-	
-
 	
 	private static void handleRequestErrors(){
 		//TODO: implement
@@ -218,11 +191,6 @@ public class Parser {
 	// TODO: think if here or in somewhere else
 	public static String parseAndConstructLocalPath(String i_RequestedPage)
 	{
-		
 		return null;
 	}
-
-
-
-
 }

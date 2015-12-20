@@ -4,13 +4,12 @@ import java.util.HashMap;
 
 public class HTTPResponse {
 	HashMap<String, String> m_HttpRequestParams;
-	String m_HttpVersion; // client error
+	String m_HttpVersion; 
 	String m_ContentExtension;
-	String m_RequestedPage; // TODO: check if valid exist
+	String m_RequestedPage;
 	String m_RequestType;
 	HTTPResponseCode m_ErrorsFoundInRequest;
 	HTTPResponseCode m_responseStatusCode;
-	
 
 	int m_ContentLength; 
 	String m_ContentType;
@@ -20,17 +19,14 @@ public class HTTPResponse {
 	String v_TransferEncodingChunked = "Transfer-Encoding: chunked";
 	String m_PathTofile;
 	String m_messageBody;
-	
-	boolean m_fileIsExpected = true;
-	boolean isChunked = false;
-	
-	
-	
+
+	boolean v_fileIsExpected = true;
+	boolean v_isChunked = false;
+
 	final String SERVERS_DEFAULT_HTTP_VERSION = "HTTP/1.1";
 	final String _CRLF = "\r\n";
 	final String _SP = " ";
 	byte[] templatedHTML;
-
 
 	public HTTPResponse(HashMap<String, String> i_HttpRequest, HashMap<String,String> request_params) 
 	{
@@ -56,19 +52,17 @@ public class HTTPResponse {
 		{
 			m_HttpVersion = i_HttpRequest.get("HTTPVersion");
 			m_RequestType = i_HttpRequest.get("RequestType");
-			// TODO: transfer the extension from the parse
 			m_ContentExtension = i_HttpRequest.get("extension");
-			
 			m_ContentType = constructExtensionToContentType();
-			
+
 			if(i_HttpRequest.containsKey("chunked")){
-				isChunked = i_HttpRequest.get("chunked").equals("yes");
+				v_isChunked = i_HttpRequest.get("chunked").equals("yes");
 			}
 
 			if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
 				if(i_HttpRequest.containsKey("originalRequest")){
 					m_messageBody = i_HttpRequest.get("originalRequest");
-					m_fileIsExpected = false;
+					v_fileIsExpected = false;
 				}
 			}
 			else {
@@ -76,20 +70,17 @@ public class HTTPResponse {
 
 
 				if(m_RequestType.equals(HttpRequestType.HTTP_HEAD.displayName())){
-					m_fileIsExpected = false;
+					v_fileIsExpected = false;
 
 				}
-
 			}
 		}
-
 	}
 
 	// The Method for clients of this object
 	public String GenerateResponse() 
 	{
 		String result = constructResponse();
-		//System.out.println(result);
 		return result;
 	}
 
@@ -98,17 +89,12 @@ public class HTTPResponse {
 		// Construct the first status line
 		boolean buildErroredResponse = m_responseStatusCode.equals(HTTPResponseCode.BAD_REQUEST) || 
 				m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED);
-		
+
 		if (buildErroredResponse) 
 		{
 			m_Response += SERVERS_DEFAULT_HTTP_VERSION + _SP + m_responseStatusCode.displayName() + _CRLF;
 			return m_Response;
 		}
-		/*else if () 
-		{
-			m_Response += m_responseStatusCode.displayName() + "\r\n";
-			return m_Response;
-		}*/
 		else if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
 			constructResponseCodeTrace();
 			m_Response += (SERVERS_DEFAULT_HTTP_VERSION+ _SP + m_responseStatusCode.displayName() + 
@@ -119,8 +105,8 @@ public class HTTPResponse {
 		{
 			constructResponseCode();
 			m_Response += (SERVERS_DEFAULT_HTTP_VERSION + _SP +m_responseStatusCode.displayName() + _CRLF);
-					
-			if(isChunked){
+
+			if(v_isChunked){
 				m_Response += m_ContentType + _CRLF + 
 						v_TransferEncodingChunked + _CRLF + _CRLF;
 			}
@@ -128,11 +114,7 @@ public class HTTPResponse {
 				m_Response += m_ContentType + _CRLF + 
 						v_ContentLength + m_ContentLength + _CRLF + _CRLF;
 			}
-
 		}
-
-		// TODO: Print the request Headers with the response
-
 		return m_Response;
 	}
 
@@ -209,20 +191,20 @@ public class HTTPResponse {
 		{
 			if (file.exists())
 			{
-				// TODO: check if int or long
-				if(!isChunked){
+				if(!v_isChunked){
 					if(file.getName().equals("params_info.html")){
 						templatedHTML = HTMLTemplater.templateHTML(file,m_HttpRequestParams);
 						m_ContentLength = (int) templatedHTML.length;
 					} else {
 						m_ContentLength = (int) file.length();
 					}
-					
-				} else if(file.getName().equals("params_info.html") && isChunked){
+
+				} else if(file.getName().equals("params_info.html") && v_isChunked){
+
 					//if for a weird reason the client want the page in chunks we still need to template it
 					templatedHTML = HTMLTemplater.templateHTML(file,m_HttpRequestParams);
 				}
-				
+
 				m_PathTofile = pathname;
 				return true;
 			}
@@ -234,7 +216,7 @@ public class HTTPResponse {
 		return false;
 	}
 
-	
+
 	private String constructExtensionToContentType()
 	{
 		switch (m_ContentExtension) {
@@ -275,11 +257,11 @@ public class HTTPResponse {
 
 	public String getPathToFile() {
 
-		//TODO: Add here what to return in case of bad request
-		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.m_fileIsExpected){
+		//TODO: Add here what to return in case of bad request (for LAB #2)
+		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.v_fileIsExpected){
 			return null;
 		}
-		//TODO: change the condition because it's not coming parsed like this.
+
 		if (m_PathTofile.equals("/")) {
 			return ConfigurationObject.getRoot() + "/" + "index.html";
 		}
@@ -287,37 +269,6 @@ public class HTTPResponse {
 	}
 
 	public boolean fileIsExpected(){
-		return m_fileIsExpected;
+		return v_fileIsExpected;
 	}
-	
-	
-
-	/*
-	public String constructContentTypeResponse()
-	{
-		if (m_ContentType.equals("text")) {
-			m_Response += (v_ContentType + "text/" + m_ContentType);
-
-			// TODO: think of a system how to call the resource after the response was sent
-		}
-		else if (m_ContentType.equals("image")) 
-		{
-			String extension = ImageTypes.getExtestion(m_ContentExtension);
-
-			m_Response += (v_ContentType + "\n" + "image/" + extension);
-
-			// TODO: send the image after the request was sent
-
-		} 
-		else 
-		{
-			m_Response += (v_ContentType + "\n" + "application/octet-stream");
-
-			// TODO: send steam to user
-		}
-
-		return m_Response;
-	}
-	 */
-
 }

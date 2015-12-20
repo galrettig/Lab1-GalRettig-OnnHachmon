@@ -101,12 +101,9 @@ public class HTTPRequest {
 		}
 	}
 
-	//TODO: handle file extension errors
-	//TODO: use the enum directly
 	private void handleFileExtensionErrors(){
 		if(m_requestHeaders.get("errors").equals("none")){
 			HTTPResponseCode BadReqcode = HTTPResponseCode.BAD_REQUEST;
-			//removed comment on the replace , check later
 			m_requestHeaders.put("errors", BadReqcode.displayName());
 		}
 	}
@@ -165,29 +162,19 @@ public class HTTPRequest {
 				}
 			}
 		}
-
 	}
-
-
-
 	private void handleHeadRequest(){
-
-		handleGetRequest();//same as get only not providing the message body
+		//same as get only not providing the message body
+		handleGetRequest();
 	}
-
-
-
+	
+	// TODO: Gal
 	private void handleTraceRequest(){
 
-
 	}
+	
+	//TODO: Gal
 	private void handleErroredRequest(){}
-
-
-
-
-
-
 
 
 	public HashMap<String, String> getMap (){

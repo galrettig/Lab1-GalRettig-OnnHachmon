@@ -87,15 +87,10 @@ public class HTMLTemplater {
 			reader.close();
 			String templatedFile = constructString(htmlString, params);
 			return templatedFile.getBytes();
-			
-			
-			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: FILE NOT FOUND");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: IO EXCEPTION");
 		}
 		return null;
 	}

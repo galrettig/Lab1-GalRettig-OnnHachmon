@@ -11,79 +11,74 @@ import java.net.Socket;
 
 public class HandleRequest implements Runnable {
 
-	private final Socket connection;
+	private final Socket m_Connection;
 
-	private HTTPResponse response;
+	private HTTPResponse m_Response;
 
-	BufferedReader inputClient;
-	String line, fullRequest;
-	String messageBodyString;
-	int contentLength;
-	char[] msgBodyCharBuffer;
-	StringBuilder messageBodyBuilder;
+	BufferedReader m_ClientInput;
+	String m_line, m_FullRequest;
+	String m_messageBodyString;
+	int m_contentLength;
+	char[] m_MsgBodyCharBuffer;
+	StringBuilder m_MessageBodyBuilder;
 
 	private final String ContentLengthHeader = "Content-Length: ";
 
 	public HandleRequest(Socket i_connection)
 	{
-		this.connection = i_connection;
-		line = "";
-		fullRequest = "";
-		messageBodyString = null;
-		contentLength = -1;
-		messageBodyBuilder = null;
-		response = null;
-
+		this.m_Connection = i_connection;
+		m_line = "";
+		m_FullRequest = "";
+		m_messageBodyString = null;
+		m_contentLength = -1;
+		m_MessageBodyBuilder = null;
+		m_Response = null;
 	}
 
 	@Override
 	public void run() {			
 
 		try {
-			//TODO: handle the connection
-			if (connection.isClosed()) {
+			if (m_Connection.isClosed()) {
 				return;
 			} 
-			inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			line = inputClient.readLine();				
+			m_ClientInput = new BufferedReader(new InputStreamReader(m_Connection.getInputStream()));
+			m_line = m_ClientInput.readLine();				
 
 			// Read Request According to Http Protocol
-			while(line != null && !line.equals(""))
+			while(m_line != null && !m_line.equals(""))
 			{
 				// Check For Request With A Body Message
-				if(line.indexOf(ContentLengthHeader) > -1){
-					String bodyContentLengthAsString = line.substring(ContentLengthHeader.length());
-					contentLength = Integer.parseInt(bodyContentLengthAsString);
+				if(m_line.indexOf(ContentLengthHeader) > -1){
+					String bodyContentLengthAsString = m_line.substring(ContentLengthHeader.length());
+					m_contentLength = Integer.parseInt(bodyContentLengthAsString);
 				}
-
-				fullRequest += (line + "\n");
-				line = inputClient.readLine();
+				m_FullRequest += (m_line + "\n");
+				m_line = m_ClientInput.readLine();
 			}
 
 			// Handle With Request that Contain Body Message
-			if(contentLength > 0){
-				msgBodyCharBuffer = new char[contentLength];
-				inputClient.read(msgBodyCharBuffer);
+			if(m_contentLength > 0){
+				m_MsgBodyCharBuffer = new char[m_contentLength];
+				m_ClientInput.read(m_MsgBodyCharBuffer);
+				m_MessageBodyBuilder = new StringBuilder();
 
-				messageBodyBuilder = new StringBuilder();
-
-				for(int i = 0; i < msgBodyCharBuffer.length; i++)
+				for(int i = 0; i < m_MsgBodyCharBuffer.length; i++)
 				{
-					messageBodyBuilder.append(msgBodyCharBuffer[i]);
+					m_MessageBodyBuilder.append(m_MsgBodyCharBuffer[i]);
 				}
-
-				messageBodyString = messageBodyBuilder.toString();
+				m_messageBodyString = m_MessageBodyBuilder.toString();
 			}
 			
 			//TRACE: Request Headers
-			System.out.println(fullRequest);
-			HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
+			System.out.println(m_FullRequest);
+			HTTPResponse http_response = this.handleRequest(m_FullRequest, m_messageBodyString, m_contentLength);
 
-			if (connection.isConnected()) {
-				handleResponse(http_response, connection);					
+			if (m_Connection.isConnected()) {
+				handleResponse(http_response, m_Connection);					
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("ERROR: IO Exception");
 		} 
 	}
 
@@ -106,13 +101,13 @@ public class HandleRequest implements Runnable {
 					File file= new File(res.getPathToFile());
 					
 					//serving without chunked transfer
-					if(!res.isChunked){
+					if(!res.v_isChunked){
 						byte[] fileToSend;
 						
 						if(file.getName().equals("params_info.html")){
 							fileToSend = res.templatedHTML;
 						} else {
-							fileToSend = readFile(file);
+							fileToSend = Utils.readFile(file);
 						}
 						
 						if(!connection.isClosed()){
@@ -128,13 +123,9 @@ public class HandleRequest implements Runnable {
 							writeChunkData(new File(res.getPathToFile()),writer);
 						}
 					}
-
 				}
 				writer.close();
 			}
-
-			// TODO: Add here the option how to send the file Regular or Chuncked
-
 		} catch (IOException e) {
 			System.err.println("Network Problem: Socket was Closed");
 		} 
@@ -146,33 +137,8 @@ public class HandleRequest implements Runnable {
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders, req.m_HttpRequestParams);
 		return res;
 	}
-
-	//TODO: read
-	private byte[] readFile(File file)
-	{
-		try
-		{
-			FileInputStream fis = new FileInputStream(file);
-			byte[] bFile = new byte[(int)file.length()];
-			// read until the end of the stream.
-			while(fis.available() != 0)
-			{
-				fis.read(bFile, 0, bFile.length);
-			}
-			fis.close();
-			return bFile;
-		}
-		catch(FileNotFoundException e)
-		{
-			// do something
-		}
-		catch(IOException e)
-		{
-			// do something
-		}
-		return null;
-	}
-
+	
+	
 	private void writeChunkData(File file, DataOutputStream writer){
 
 		try
@@ -206,9 +172,8 @@ public class HandleRequest implements Runnable {
 		} 
 		catch (IOException e) 
 		{
-			
+			System.err.println("ERROR: IO Exception");
 		}
-
 	}
 	
 	
@@ -219,6 +184,7 @@ public class HandleRequest implements Runnable {
 			ByteArrayInputStream fis = new ByteArrayInputStream(string);
 			byte[] bFile = new byte[1024];
 			int chunkSize = 0;
+			
 			// read until the end of the stream.
 			while((chunkSize = fis.read(bFile)) != -1)
 			{
@@ -236,20 +202,13 @@ public class HandleRequest implements Runnable {
 			writer.flush();
 			writer.writeBytes("\r\n");
 			writer.flush();
-
 		}
 
 		catch(FileNotFoundException e)
 		{
-			// do something
+			System.err.println("ERROR: File Not Found");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: IO Exception");
 		}
-
 	}
-
-
-
-
 }
