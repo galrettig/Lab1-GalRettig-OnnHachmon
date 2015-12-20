@@ -73,26 +73,21 @@ public class HandleRequest implements Runnable {
 				}
 
 				messageBodyString = messageBodyBuilder.toString();
-
-				// TODO: Del
-				//System.out.println("message body = " + messageBodyStr.toString());
-				//fullRequest += messageBodyStr.toString();
 			}
-
-			System.out.println(fullRequest);//full request obtained
+			
+			//TRACE: Request Headers
+			System.out.println(fullRequest);
 			HTTPResponse http_response = this.handleRequest(fullRequest, messageBodyString, contentLength);
 
 			if (connection.isConnected()) {
 				handleResponse(http_response, connection);					
 			}
 		} catch (IOException e) {
-
 			e.printStackTrace();
 		} 
 	}
 
 	public void handleResponse(HTTPResponse res, Socket connection){
-
 		String response = res.GenerateResponse();
 		DataOutputStream writer;
 
@@ -114,7 +109,6 @@ public class HandleRequest implements Runnable {
 					if(!res.isChunked){
 						byte[] fileToSend;
 						
-						
 						if(file.getName().equals("params_info.html")){
 							fileToSend = res.templatedHTML;
 						} else {
@@ -126,7 +120,7 @@ public class HandleRequest implements Runnable {
 							writer.flush();
 						}
 
-						//serving as chunks
+					//serving as chunks
 					} else {
 						if(file.getName().equals("params_info.html")){
 							writeChunkString(res.templatedHTML, writer);
@@ -145,18 +139,15 @@ public class HandleRequest implements Runnable {
 			System.err.println("Network Problem: Socket was Closed");
 		} 
 	}
-
-	// TODO: check if it's right to create http response here
+	
+	// create http request and response
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
-
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders, req.m_HttpRequestParams);
-
 		return res;
 	}
 
-
-
+	//TODO: read
 	private byte[] readFile(File file)
 	{
 		try
@@ -211,10 +202,11 @@ public class HandleRequest implements Runnable {
 
 		catch(FileNotFoundException e)
 		{
-			// do something
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("FileNotFound While Writing Cuncked Data");
+		} 
+		catch (IOException e) 
+		{
+			
 		}
 
 	}

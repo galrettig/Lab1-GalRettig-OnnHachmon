@@ -4,8 +4,6 @@
 		 <meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-    	<link rel="shortcut icon" type="image/png" href="/rocket.png"/>
-
 
     	<style type="text/css">
     		body {
@@ -127,13 +125,13 @@
 		<div class="container">
 			<!-- Moving Title  -->
 			<h1><marquee align="middle">
-                Computer networks 2015/2016: LAB #1
+                Computer networks 2015/2016: LAB #1 
 			</marquee></h1>
 		</div>
 
 		<div class="container">
 			<!-- Fixed Title -->
-			<h2>Gal Rettig &amp Onn Hachmon</h2>
+			<h2>Gal Retting &amp Onn Hachmon</h2>
 		</div>
 
 		<div class="container">
@@ -180,16 +178,19 @@
 			<form method = "POST" action = "/params_info.html">
 				<a name="myForm">
 				<ul class="form-style">
+    			<li>
+    				<label>Sender/Reciever</label>
+    				<input type="text" name="sender" class="field-divided" placeholder="Sender" />
+    				<input type="text" name="receiver" class="field-divided" placeholder="Receiver" />
+    			</li>
 
 			    <li>
-			        <label>Message Us What You Think</label>
+			        <label>Message</label>
 			        <textarea name="message" id="field5" class="field-long field-textarea"></textarea>
 			    </li>
-                    
-                <li>
-                    <input type="checkbox" name="myCheckBox" value="Check"> Check Box Button
-                    
-                </li>
+			    <li>
+			    	 <input type="checkbox" name="myCheckBox" class="field-long" value="Checked"> Check Box Button
+			    </li>
 			    <li>
 			        <input type="submit" value="Submit" />
 			    </li>
