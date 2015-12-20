@@ -20,10 +20,8 @@ public class HTTPRequest {
 	HashMap<String, String> m_HttpRequestParams = new HashMap<>();
 	HashMap<String, String> m_requestHeaders = new HashMap<>();
 	String m_originalRequest;
-	//
-	//
 	String m_httpMessageBody;
-	int m_errorCodeIfOccured = -1;//-1 not occured , 4 bad-request , 5 not implemented
+	int m_errorCodeIfOccurred = -1;//-1 not occurred , 4 bad-request , 5 not implemented
 
 
 	public HTTPRequest(String io_originalRequest, String io_httpMessageBody, int contentLength){
@@ -32,8 +30,8 @@ public class HTTPRequest {
 
 		// Parse the Raw Request and check it
 		if(!Parser.checkIfRequestIsParsable(io_originalRequest)){
-			
-			m_errorCodeIfOccured = 4;
+
+			m_errorCodeIfOccurred = 4;
 			this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 		} else {
 
@@ -50,15 +48,11 @@ public class HTTPRequest {
 				this.handleRequestHeaders(requestAsArray);
 
 			} else {
-				m_errorCodeIfOccured = 5;
+				m_errorCodeIfOccurred = 5;
 				this.m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 			}
 		}
 	}
-	
-	
-	
-
 
 	private void handleRequestHeaders(String[] request){
 		this.m_requestHeaders = Parser.breakRequestStringToHeaders(request);
@@ -73,23 +67,19 @@ public class HTTPRequest {
 		m_requestHeaders.put("URI", this.m_RequestedPage);
 		m_requestHeaders.put("HTTPVersion", this.m_HTTPver);
 		m_requestHeaders.put("RequestType", m_RequestType.displayName());
-		
-
-
 		m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
+
 		if(m_RequestType.displayName().equals(HttpRequestType.TRACE.displayName())){
 			m_requestHeaders.put("originalRequest", m_originalRequest);
 			m_requestHeaders.put("extension", "trace");
 		} else {
-		
 			handleFileExtension();
 		}
-
-
 	}
 
 	private void handleFileExtension(){
 		String extension = Parser.getExtensionFromFileName(m_RequestedPage);
+
 		if(extension == null){
 			handleFileExtensionErrors();
 		} else {
@@ -143,7 +133,7 @@ public class HTTPRequest {
 			String[] pageBrokenToQuery = Parser.parseGetRequest(m_RequestedPage);
 
 			if(pageBrokenToQuery == null) {
-				m_errorCodeIfOccured = 4;
+				m_errorCodeIfOccurred = 4;
 				handleErroredRequest();
 			} else {
 				m_RequestedPage = pageBrokenToQuery[0];
@@ -157,22 +147,24 @@ public class HTTPRequest {
 			if(this.m_httpMessageBody.length() > 0){
 				m_HttpRequestParams = Parser.handleEncodedParams(m_httpMessageBody);
 				if(m_HttpRequestParams == null){
-					m_errorCodeIfOccured = 4;// was suppose to provide parameters
+					m_errorCodeIfOccurred = 4;// was suppose to provide parameters
 					handleErroredRequest();
 				}
 			}
 		}
 	}
+
+	//TODO: Gal
 	private void handleHeadRequest(){
 		//same as get only not providing the message body
 		handleGetRequest();
 	}
-	
+
 	// TODO: Gal
 	private void handleTraceRequest(){
 
 	}
-	
+
 	//TODO: Gal
 	private void handleErroredRequest(){}
 
@@ -193,7 +185,7 @@ public class HTTPRequest {
 
 	public HTTPResponseCode mapErrorValueInRequestToResponseType(){
 		HTTPResponseCode code = HTTPResponseCode.OK;
-		switch (this.m_errorCodeIfOccured) {
+		switch (this.m_errorCodeIfOccurred) {
 		case -1:
 			code = HTTPResponseCode.OK;
 			break;
@@ -210,15 +202,4 @@ public class HTTPRequest {
 		}
 		return code;
 	}
-
-
-	// webserver -> read configuration file and create object -> open listener (configuration object) -> waiting for request
-
-	// create http request -> parser class -> create http response -> respond to client
-
-	// parse request and create request object -> create response
-
-
-
-
 }

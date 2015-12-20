@@ -67,11 +67,9 @@ public class HTTPResponse {
 			}
 			else {
 				m_RequestedPage = i_HttpRequest.get("URI");
-
-
+				
 				if(m_RequestType.equals(HttpRequestType.HTTP_HEAD.displayName())){
 					v_fileIsExpected = false;
-
 				}
 			}
 		}
@@ -118,8 +116,7 @@ public class HTTPResponse {
 		return m_Response;
 	}
 
-
-	////
+	
 	private void constructResponseCodeTrace() {
 
 		if (m_RequestType.equals("Other")) 
@@ -136,7 +133,6 @@ public class HTTPResponse {
 		{
 			m_responseStatusCode = HTTPResponseCode.OK;
 		}
-
 	}
 
 	private boolean checkResourceTrace(String i_messageBody) {
@@ -154,9 +150,7 @@ public class HTTPResponse {
 
 	}
 
-	/////
-
-
+	
 	private void constructResponseCode() {
 
 		if (m_RequestType.equals("Other")) 
@@ -173,10 +167,9 @@ public class HTTPResponse {
 		{
 			m_responseStatusCode = HTTPResponseCode.OK;
 		}
-
 	}
 
-
+	
 	private boolean checkResource(String i_RequestedPage) {
 
 		String pathname = ConfigurationObject.getRoot() + i_RequestedPage;
@@ -216,7 +209,7 @@ public class HTTPResponse {
 		return false;
 	}
 
-
+	// The Web Server Support more Content Extension then the lab requires, can add more... 
 	private String constructExtensionToContentType()
 	{
 		switch (m_ContentExtension) {

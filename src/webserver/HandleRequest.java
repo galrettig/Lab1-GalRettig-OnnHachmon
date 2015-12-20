@@ -12,9 +12,7 @@ import java.net.Socket;
 public class HandleRequest implements Runnable {
 
 	private final Socket m_Connection;
-
 	private HTTPResponse m_Response;
-
 	BufferedReader m_ClientInput;
 	String m_line, m_FullRequest;
 	String m_messageBodyString;
@@ -69,7 +67,7 @@ public class HandleRequest implements Runnable {
 				}
 				m_messageBodyString = m_MessageBodyBuilder.toString();
 			}
-			
+
 			//TRACE: Request Headers
 			System.out.println(m_FullRequest);
 			HTTPResponse http_response = this.handleRequest(m_FullRequest, m_messageBodyString, m_contentLength);
@@ -99,17 +97,17 @@ public class HandleRequest implements Runnable {
 				// Send The File and Close Response As Http protocol request
 				if(res.getPathToFile() != null && res.fileIsExpected()){
 					File file= new File(res.getPathToFile());
-					
+
 					//serving without chunked transfer
 					if(!res.v_isChunked){
 						byte[] fileToSend;
-						
+
 						if(file.getName().equals("params_info.html")){
 							fileToSend = res.templatedHTML;
 						} else {
 							fileToSend = Utils.readFile(file);
 						}
-						
+
 						if(!connection.isClosed()){
 							writer.write(fileToSend, 0, fileToSend.length);
 							writer.flush();
@@ -128,17 +126,17 @@ public class HandleRequest implements Runnable {
 			}
 		} catch (IOException e) {
 			System.err.println("Network Problem: Socket was Closed");
-		} 
+		}
 	}
-	
+
 	// create http request and response
 	public HTTPResponse handleRequest(String i_fullRequest, String msgBody, int contentLength){
 		HTTPRequest req = new HTTPRequest(i_fullRequest, msgBody, contentLength);
 		HTTPResponse res = new HTTPResponse(req.m_requestHeaders, req.m_HttpRequestParams);
 		return res;
 	}
-	
-	
+
+
 	private void writeChunkData(File file, DataOutputStream writer){
 
 		try
@@ -175,8 +173,8 @@ public class HandleRequest implements Runnable {
 			System.err.println("ERROR: IO Exception");
 		}
 	}
-	
-	
+
+
 	private void writeChunkString(byte[] string, DataOutputStream writer){
 
 		try
@@ -184,7 +182,7 @@ public class HandleRequest implements Runnable {
 			ByteArrayInputStream fis = new ByteArrayInputStream(string);
 			byte[] bFile = new byte[1024];
 			int chunkSize = 0;
-			
+
 			// read until the end of the stream.
 			while((chunkSize = fis.read(bFile)) != -1)
 			{

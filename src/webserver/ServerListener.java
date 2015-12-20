@@ -6,9 +6,9 @@ import java.net.Socket;
 
 public class ServerListener {
 	
-	private SimpleThreadPool m_threadPool;
+	private ThreadPool m_threadPool;
 	
-	public ServerListener(SimpleThreadPool i_ThreadPool)
+	public ServerListener(ThreadPool i_ThreadPool)
 	{
 		this.m_threadPool = i_ThreadPool;
 	}
@@ -24,6 +24,7 @@ public class ServerListener {
 		
 		int port = Integer.parseInt(portString);
 		
+		@SuppressWarnings("resource")
 		ServerSocket serverSocket = new ServerSocket(port);
 		
 		System.out.println("start listeneing on port: " + port + "\n");

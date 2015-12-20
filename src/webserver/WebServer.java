@@ -17,7 +17,7 @@ public class WebServer {
 			throw new IOException("Problem in Reading The Config File");
 		}
 
-		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
+		ThreadPool threadPool = new ThreadPool(ConfigurationObject.getMaxThreads());
 		ServerListener webserver = new ServerListener(threadPool);
 
 		webserver.start();

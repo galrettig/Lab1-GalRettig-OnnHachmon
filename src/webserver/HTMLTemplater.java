@@ -15,6 +15,7 @@ public class HTMLTemplater {
 	private static int[] getIndexesOfMarks (String htmlString, int pointer){
 		int StartOfMark = htmlString.indexOf(_MARK_START, pointer);
 		int EndOfMark = htmlString.indexOf(_MARK_END, pointer);
+		
 		if(StartOfMark > -1 && EndOfMark > StartOfMark){
 			int[] tuple = new int[] {StartOfMark, EndOfMark};
 			return tuple;
@@ -50,12 +51,10 @@ public class HTMLTemplater {
 			pointer = EndOfMark + _MARK_END.length();
 			markPositions = getIndexesOfMarks(htmlString, pointer);
 		}
+		
 		templatedHTMLtext += htmlString.substring(pointer);
-		return templatedHTMLtext;
-		
-		
+		return templatedHTMLtext;	
 	}
-	
 	
 	private static String mapVariableNameToParamString(String variableName, HashMap<String, String> params){
 		if(params.containsKey(variableName)){
@@ -71,7 +70,6 @@ public class HTMLTemplater {
 			String paramName = variableLine.substring(indexOfUnderScore);
 			return paramName;
 		}
-		
 		return null;
 	}
 	

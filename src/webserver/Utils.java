@@ -9,64 +9,64 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class Utils {
-	
-		public static byte[] readFile(File file)
+
+	public static byte[] readFile(File file)
+	{
+		try
 		{
-			try
+			FileInputStream fis = new FileInputStream(file);
+			byte[] bFile = new byte[(int)file.length()];
+			// read until the end of the stream.
+			while(fis.available() != 0)
 			{
-				FileInputStream fis = new FileInputStream(file);
-				byte[] bFile = new byte[(int)file.length()];
-				// read until the end of the stream.
-				while(fis.available() != 0)
-				{
-					fis.read(bFile, 0, bFile.length);
-				}
-				fis.close();
-				return bFile;
+				fis.read(bFile, 0, bFile.length);
 			}
-			catch(FileNotFoundException e)
-			{
-				System.out.println("Error: File Not Found");
-			}
-			catch(IOException e)
-			{
-				System.out.println("Error: IO Exception");
-			}
-			return null;
+			fis.close();
+			return bFile;
 		}
-		
-		
-		public static HashMap<String, String> readConfFile()
+		catch(FileNotFoundException e)
 		{
-			Properties prop = new Properties();
-			InputStream input = null;
-			HashMap<String, String> confList = new HashMap<>();
-			 
-			String pathToConfIniFile = "C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\mywebconf.ini";
+			System.out.println("Error: File Not Found");
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error: IO Exception");
+		}
+		return null;
+	}
 
-			try {
-				input = new FileInputStream(pathToConfIniFile);
 
-				// load a properties file
-				prop.load(input);
+	public static HashMap<String, String> readConfFile()
+	{
+		Properties prop = new Properties();
+		InputStream input = null;
+		HashMap<String, String> confList = new HashMap<>();
 
-				// get the property value and store them in hashmap
-				confList.put("port", prop.getProperty("port"));
-				confList.put("root", prop.getProperty("root"));
-				confList.put("maxThreads", prop.getProperty("maxThreads"));
-				confList.put("defaultPage", prop.getProperty("defaultPage"));
-				
-			} catch (IOException ex) {
-				System.err.println("Could not Read The Config File duo to bad Path or IOERROR");
-			} finally {
-				if (input != null) {
-					try {
-						input.close();
-					} catch (IOException e) {
-						System.err.println("ERROR: IO Exception");
-					}
+		String pathToConfIniFile = "C:\\Sources\\Lab1-GalRettig-OnnHachmon\\configuration\\mywebconf.ini";
+
+		try {
+			input = new FileInputStream(pathToConfIniFile);
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and store them in hashmap
+			confList.put("port", prop.getProperty("port"));
+			confList.put("root", prop.getProperty("root"));
+			confList.put("maxThreads", prop.getProperty("maxThreads"));
+			confList.put("defaultPage", prop.getProperty("defaultPage"));
+
+		} catch (IOException ex) {
+			System.err.println("Could not Read The Config File duo to bad Path or IOERROR");
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					System.err.println("ERROR: IO Exception");
 				}
 			}
-			return confList;
-		}	
+		}
+		return confList;
+	}	
 }

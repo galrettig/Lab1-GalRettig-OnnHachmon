@@ -6,7 +6,6 @@ public enum HttpRequestType {
 	HTTP_HEAD("HEAD"),
 	TRACE("TRACE"),
 	OTHER("Other");
-	
 
 	private String displayName;
 
