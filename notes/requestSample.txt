@@ -1,4 +1,4 @@
-HEAD /index.html HTTP/1.1
+TRACE /index.html HTTP/1.1
 Host: localhost:8080
 Connection: keep-alive
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
@@ -10,6 +10,24 @@ Accept-Language: en-US,en;q=0.8,he;q=0.6
 chunked: yes
 
 a=4&c=3&ras=hiyo
+
+TRACE /params_info.html HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 39
+Pragma: no-cache
+Cache-Control: no-cache
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Origin: http://localhost:8080
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+DNT: 1
+Referer: http://localhost:8080/index.html
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.8,he;q=0.6
+
+sender=gal&receiver=rettig&message=yoyo
 
 
 POST / HTTP/1.1

@@ -70,7 +70,12 @@ public class HTTPRequest {
 		m_requestHeaders.put("errors", this.mapErrorValueInRequestToResponseType().displayName());
 
 		if(m_RequestType.displayName().equals(HttpRequestType.TRACE.displayName())){
-			m_requestHeaders.put("originalRequest", m_originalRequest);
+			if(m_httpMessageBody != null){
+				m_requestHeaders.put("originalRequest", m_originalRequest+"\r\n"+m_httpMessageBody+"\r\n");
+			} else {
+				m_requestHeaders.put("originalRequest", m_originalRequest);
+			}
+			
 			m_requestHeaders.put("extension", "trace");
 		} else {
 			handleFileExtension();
@@ -154,7 +159,6 @@ public class HTTPRequest {
 		}
 	}
 
-	//TODO: Gal
 	private void handleHeadRequest(){
 		//same as get only not providing the message body
 		handleGetRequest();
