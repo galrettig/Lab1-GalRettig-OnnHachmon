@@ -121,7 +121,6 @@ public class HTTPRequest {
 			break;
 		case "TRACE":
 			returnValue = HttpRequestType.TRACE;
-			handleTraceRequest();
 			break;
 		default:
 			handleErroredRequest();
@@ -164,10 +163,7 @@ public class HTTPRequest {
 		handleGetRequest();
 	}
 
-	// TODO: Gal
-	private void handleTraceRequest(){
-
-	}
+	
 
 	//TODO: Gal
 	private void handleErroredRequest(){}
