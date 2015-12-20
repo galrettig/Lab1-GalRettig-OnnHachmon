@@ -90,6 +90,7 @@ public class HTTPResponse {
 
 		if (buildErroredResponse) 
 		{
+			this.v_fileIsExpected = false;
 			m_Response += SERVERS_DEFAULT_HTTP_VERSION + _SP + m_responseStatusCode.displayName() + _CRLF;
 			return m_Response;
 		}
@@ -251,9 +252,9 @@ public class HTTPResponse {
 	public String getPathToFile() {
 
 		// TODO: del After Gal Check
-//		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.v_fileIsExpected){
-//			return null;
-//		}
+		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.v_fileIsExpected){
+			return null;
+		}
 		
 		if (m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)) {
 			return ConfigurationObject.getRoot() + "/" + "404Error.html";
