@@ -250,8 +250,16 @@ public class HTTPResponse {
 
 	public String getPathToFile() {
 
-		//TODO: Add here what to return in case of bad request (for LAB #2)
-		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.v_fileIsExpected){
+		// TODO: del After Gal Check
+//		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.v_fileIsExpected){
+//			return null;
+//		}
+		
+		if (m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND)) {
+			return ConfigurationObject.getRoot() + "/" + "404Error.html";
+		} else if (m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED)) {
+			return ConfigurationObject.getRoot() + "/" + "501Error.html";
+		} else if (!this.v_fileIsExpected) {
 			return null;
 		}
 
