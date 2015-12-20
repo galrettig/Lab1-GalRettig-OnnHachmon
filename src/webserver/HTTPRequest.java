@@ -189,7 +189,6 @@ public class HTTPRequest {
 			return true;
 		}
 		return false;
-
 	}
 
 	public HTTPResponseCode mapErrorValueInRequestToResponseType(){

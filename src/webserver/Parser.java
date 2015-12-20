@@ -3,8 +3,7 @@ import java.util.HashMap;
 
 public class Parser {
 
-	
-	static boolean checkIfImage(String URI){
+	protected static boolean checkIfImage(String URI){
 		String[] acceptedExtensions = {".bmp", ".jpg", ".gif", ".png"};
 		int minExtLength = 4;
 		boolean imageFound = false;
@@ -21,7 +20,8 @@ public class Parser {
 		return imageFound;
 	}
 	
-	static String getExtensionFromFileName(String fileName){
+	protected static String getExtensionFromFileName(String fileName){
+		
 		if(fileName == null) { return null; }
 		
 		String extension = null;
@@ -36,7 +36,7 @@ public class Parser {
 	}
 
 	
-	static boolean checkIfRequestIsParsable(String i_fullRequest){
+	protected static boolean checkIfRequestIsParsable(String i_fullRequest){
 		boolean parsable = false;
 		int indexOfNewLine = i_fullRequest.indexOf("\n");
 		if(indexOfNewLine > -1){
@@ -52,7 +52,7 @@ public class Parser {
 	
 	// check if the the request-line is acceptable , returns the the headers of the request-line splitted to spaces into array
 	// or null if it cannot
-	static String[] SplitRequestLineToHeadersIfAcceptable(String i_requestLine){
+	protected static String[] SplitRequestLineToHeadersIfAcceptable(String i_requestLine){
 		String[] requestLineHeaders = null;
 		if(i_requestLine.indexOf(" ") > -1){
 			String[] requestLineHeadersTemp = i_requestLine.split(" ");
@@ -67,7 +67,7 @@ public class Parser {
 	
 	// check if the the request is split able and returns the the request splitted to lines in array
 	// or null if it cannot
-	static String[] SplitRequestToLinesIfAcceptable(String originalMessage){
+	protected static String[] SplitRequestToLinesIfAcceptable(String originalMessage){
 		String[] requestSplitted = null;
 		if(originalMessage.indexOf("\n") > -1){
 			requestSplitted = originalMessage.split("\n");
@@ -76,7 +76,7 @@ public class Parser {
 	}
 	
 	// check if the request method is accpeptable by the server, if not returns -1
-	static HttpRequestType checkIfMethodAcceptable(String requestMethod){
+	protected static HttpRequestType checkIfMethodAcceptable(String requestMethod){
 		HttpRequestType returnValue = HttpRequestType.OTHER;
 		switch (requestMethod) {
 		case "GET":
@@ -94,13 +94,10 @@ public class Parser {
 		default:
 			break;
 		}
-		
 		return returnValue;
 	}
-	
-	
 
-	static HashMap<String, String> breakRequestStringToHeaders(String[] requestHeaders){
+	protected static HashMap<String, String> breakRequestStringToHeaders(String[] requestHeaders){
 		HashMap<String, String> headers = new HashMap<>();
 		
 		for(int i = 1; i < requestHeaders.length; i++){
@@ -110,14 +107,13 @@ public class Parser {
 				if(keyAndValue.length == 2){
 					headers.put(keyAndValue[0], keyAndValue[1]);
 				}
-				
 			}
 		}
 		return headers;
 	}
 
 	
-	static void parsePostRequest(String messageBody, HashMap<String, String> params) {
+	protected static void parsePostRequest(String messageBody, HashMap<String, String> params) {
 		if(messageBody.length() == 0){
 			handleRequestErrors();
 			params = null;
@@ -127,7 +123,7 @@ public class Parser {
 		}	
 	}
 	
-	static String[] parseGetRequest(String i_URI) {
+	protected static String[] parseGetRequest(String i_URI) {
 		int indexOfSeperator = i_URI.indexOf("?");
 		if(indexOfSeperator > -1){
 			String[] URIandParams = i_URI.split("\\?");
@@ -138,8 +134,7 @@ public class Parser {
 		return null;
 	}
 	
-	
-	static HashMap<String, String> handleEncodedParams(String paramsEncoded){
+	protected static HashMap<String, String> handleEncodedParams(String paramsEncoded){
 		String[] paramsTuples = breakEncodedParamsToTuples(paramsEncoded);
 		return extractTupleParmas(paramsTuples);
 	}
@@ -151,8 +146,7 @@ public class Parser {
 			tuples = paramsEncoded.split("&");
 		} else {
 			tuples = new String[]{paramsEncoded};
-		}
-		
+		}	
 		return tuples;
 	}
 	
@@ -168,14 +162,15 @@ public class Parser {
 	}
 	
 	private static void parseTraceRequest(HashMap<String, String> i_httpRequest) {
+		// TODO: Gal
 		System.out.println(i_httpRequest);
 	}
 
 	private static void parseHttpHeadRequest(HashMap<String, String> i_httpRequest) {
-		// TODO Auto-generated method stub
+		// TODO: Gal
 		System.out.println(i_httpRequest);
 	}
-
+	
 	private static String getCorrectPagePath(String url){
 		if(url.length() == 1 && url.indexOf("/") == 0){
 			return "/index.html";
@@ -184,13 +179,14 @@ public class Parser {
 	}
 	
 	private static void handleRequestErrors(){
-		//TODO: implement
+		//TODO: Gal
 		System.out.println("some error");
 	}
 
 	// TODO: think if here or in somewhere else
 	public static String parseAndConstructLocalPath(String i_RequestedPage)
 	{
+		// TODO: Gal
 		return null;
 	}
 }

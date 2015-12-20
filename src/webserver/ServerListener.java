@@ -4,22 +4,29 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerEscuchare {
+public class ServerListener {
 	
 	private SimpleThreadPool m_threadPool;
 	
-	public ServerEscuchare(SimpleThreadPool i_ThreadPool)
+	public ServerListener(SimpleThreadPool i_ThreadPool)
 	{
 		this.m_threadPool = i_ThreadPool;
 	}
 	
 	public void start() throws IOException
-	{
-		int port = Integer.parseInt(ConfigurationObject.getPortNumber());
+	{	
+		String portString = ConfigurationObject.getPortNumber();
+	
+		if (portString.equals(null) || portString.equals("")) { 
+			System.err.println("Port Number Is Not Valid, Please Check The Conf File");
+			System.exit(1);
+		}
+		
+		int port = Integer.parseInt(portString);
 		
 		ServerSocket serverSocket = new ServerSocket(port);
 		
-		System.out.println("start listeneing on port: " + port);
+		System.out.println("start listeneing on port: " + port + "\n");
 		
 		while (true) {
 			Socket connection = serverSocket.accept();

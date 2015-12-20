@@ -3,8 +3,6 @@ package webserver;
 import java.io.IOException;
 import java.util.HashMap;
 
-// TODO: see what happans with too many threads
-
 public class WebServer {
 
 	public static void main(String[] args) throws IOException
@@ -20,7 +18,7 @@ public class WebServer {
 		}
 
 		SimpleThreadPool threadPool = new SimpleThreadPool(ConfigurationObject.getMaxThreads());
-		ServerEscuchare webserver = new ServerEscuchare(threadPool);
+		ServerListener webserver = new ServerListener(threadPool);
 
 		webserver.start();
 	}
