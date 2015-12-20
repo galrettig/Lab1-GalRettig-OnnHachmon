@@ -115,7 +115,6 @@ public class Parser {
 	
 	protected static void parsePostRequest(String messageBody, HashMap<String, String> params) {
 		if(messageBody.length() == 0){
-			handleRequestErrors();
 			params = null;
 		}
 		else {
@@ -161,15 +160,7 @@ public class Parser {
 		return params;
 	}
 	
-	private static void parseTraceRequest(HashMap<String, String> i_httpRequest) {
-		// TODO: Gal
-		System.out.println(i_httpRequest);
-	}
-
-	private static void parseHttpHeadRequest(HashMap<String, String> i_httpRequest) {
-		// TODO: Gal
-		System.out.println(i_httpRequest);
-	}
+	
 	
 	private static String getCorrectPagePath(String url){
 		if(url.length() == 1 && url.indexOf("/") == 0){
@@ -178,15 +169,7 @@ public class Parser {
 		return url;
 	}
 	
-	private static void handleRequestErrors(){
-		//TODO: Gal
-		System.out.println("some error");
-	}
+	
 
-	// TODO: think if here or in somewhere else
-	public static String parseAndConstructLocalPath(String i_RequestedPage)
-	{
-		// TODO: Gal
-		return null;
-	}
+	
 }

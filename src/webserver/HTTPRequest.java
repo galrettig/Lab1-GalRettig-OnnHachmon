@@ -123,7 +123,6 @@ public class HTTPRequest {
 			returnValue = HttpRequestType.TRACE;
 			break;
 		default:
-			handleErroredRequest();
 			break;
 		}
 
@@ -138,7 +137,6 @@ public class HTTPRequest {
 
 			if(pageBrokenToQuery == null) {
 				m_errorCodeIfOccurred = 4;
-				handleErroredRequest();
 			} else {
 				m_RequestedPage = pageBrokenToQuery[0];
 				m_HttpRequestParams = Parser.handleEncodedParams(pageBrokenToQuery[1]);
@@ -163,7 +161,6 @@ public class HTTPRequest {
 	}
 
 	
-
 	public HashMap<String, String> getMap (){
 		return this.m_requestHeaders;
 	}
