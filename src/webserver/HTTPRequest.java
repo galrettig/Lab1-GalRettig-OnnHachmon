@@ -152,7 +152,6 @@ public class HTTPRequest {
 				m_HttpRequestParams = Parser.handleEncodedParams(m_httpMessageBody);
 				if(m_HttpRequestParams == null){
 					m_errorCodeIfOccurred = 4;// was suppose to provide parameters
-					handleErroredRequest();
 				}
 			}
 		}
@@ -164,10 +163,6 @@ public class HTTPRequest {
 	}
 
 	
-
-	//TODO: Gal
-	private void handleErroredRequest(){}
-
 
 	public HashMap<String, String> getMap (){
 		return this.m_requestHeaders;
