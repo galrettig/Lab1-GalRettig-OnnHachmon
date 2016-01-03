@@ -1,0 +1,5 @@
+bonus:
+1) user cannot surfe outside the root directory
+2) "templating" engine -- when place <?TPL _VARIABLENAME ?> in an HTML file this phrase will be replace by the param sent from
+	in the request with the name VARIABLENAME if not existing replacing it in an empty string instead
+3) More Extensions the Server can Serv
