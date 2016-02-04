@@ -15,3 +15,5 @@ bin/webserver/HTTPResponse.class
 configuration/myWebconf.ini
 configuration/myWebconf.ini
 *.class
+
+bin/webserver/HTTPResponse.class
