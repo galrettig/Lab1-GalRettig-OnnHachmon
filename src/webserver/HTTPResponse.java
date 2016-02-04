@@ -91,7 +91,7 @@ public class HTTPResponse {
 		if (buildErroredResponse) 
 		{
 			this.v_fileIsExpected = false;
-			m_Response += SERVERS_DEFAULT_HTTP_VERSION + _SP + m_responseStatusCode.displayName() + _CRLF;
+			m_Response += SERVERS_DEFAULT_HTTP_VERSION + _SP + m_responseStatusCode.displayName();
 			return m_Response;
 		}
 		else if(m_RequestType.equals(HttpRequestType.TRACE.displayName())){
@@ -250,6 +250,7 @@ public class HTTPResponse {
 	}
 
 	public String getPathToFile() {
+
 		
 		if(m_responseStatusCode.equals(HTTPResponseCode.NOT_FOUND) || m_responseStatusCode.equals(HTTPResponseCode.NOT_IMPLEMENTED) ||!this.v_fileIsExpected){
 			return null;
